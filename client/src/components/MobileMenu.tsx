@@ -13,8 +13,8 @@ const menuItems = [
   { title: "Portfolio", href: "#portfolio" },
   { title: "Blog", href: "#blog" },
   { title: "Contact", href: "#contact" },
-  { title: "Ticketmatics (Dashboard)", href: "#ticketmatics" },
-  { title: "Visucord (Dashboard)", href: "#visucord" },
+  { title: "Ticketmatics", href: "#ticketmatics" },
+  { title: "Visucord", href: "#visucord" },
   { title: "Privacy Policy", href: "#privacy" },
   { title: "Terms of Service", href: "#terms" },
 ];

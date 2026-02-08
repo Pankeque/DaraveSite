@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, Twitter, Gamepad2, Disc, Menu, ExternalLink } from "lucide-react";
-import { RegistrationModal } from "@/components/RegistrationModal";
+import { Play, Twitter, Gamepad2, Disc, Menu, ExternalLink, User, LogOut } from "lucide-react";
+import { AuthModal } from "@/components/AuthModal";
 import { RippleBackground } from "@/components/RippleBackground";
 import { MarqueeServices } from "@/components/MarqueeServices";
 import { MobileMenu } from "@/components/MobileMenu";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 500], [1, 0.9]);
@@ -28,35 +38,96 @@ export default function Home() {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            {["Home", "About", "Portfolio", "Blog", "Contact"].map((item, i) => (
-              <motion.a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i }}
-                className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
-              >
-                {item}
-              </motion.a>
-            ))}
+            <motion.a
+              href="#home"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
+            >
+              Home
+            </motion.a>
+            <motion.a
+              href="#about"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
+            >
+              About
+            </motion.a>
+            <motion.a
+              href="#portfolio"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
+            >
+              Portfolio
+            </motion.a>
+            <motion.a
+              href="/blog"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
+            >
+              Blog
+            </motion.a>
+            <motion.a
+              href="#contact"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-zinc-400 hover:text-white text-sm font-medium tracking-wider uppercase transition-colors"
+            >
+              Contact
+            </motion.a>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-black px-6 py-2.5 rounded-full font-bold text-sm tracking-wide uppercase hover:shadow-[0_0_20px_rgba(163,255,0,0.4)] transition-shadow duration-300"
-          >
-            Register
-          </motion.button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <motion.button
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-primary text-black px-6 py-2.5 rounded-full font-bold text-sm tracking-wide uppercase hover:shadow-[0_0_20px_rgba(163,255,0,0.4)] transition-shadow duration-300 flex items-center gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  {user.name}
+                </motion.button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-zinc-950 border-zinc-800 text-white">
+                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-zinc-800" />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="cursor-pointer hover:bg-zinc-900 focus:bg-zinc-900"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsModalOpen(true)}
+              className="bg-primary text-black px-6 py-2.5 rounded-full font-bold text-sm tracking-wide uppercase hover:shadow-[0_0_20px_rgba(163,255,0,0.4)] transition-shadow duration-300"
+            >
+              Register
+            </motion.button>
+          )}
 
           {/* Mobile Toggle */}
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="md:hidden p-2 text-white hover:text-primary transition-colors"
           >
@@ -83,13 +154,13 @@ export default function Home() {
             </h1>
           </motion.div>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-zinc-400 text-sm md:text-xl uppercase tracking-widest font-medium mb-12"
           >
-            Currently available for freelance worldwide
+            Currently available for networking worldwide
           </motion.p>
 
           <motion.div
@@ -202,10 +273,10 @@ export default function Home() {
               <div className="space-y-6">
                 <p className="text-xs text-zinc-600 font-bold uppercase tracking-[0.2em]">Legal & Dashboards</p>
                 <ul className="space-y-4">
-                  <li><a href="#ticketmatics" className="text-zinc-400 hover:text-white transition-colors">Ticketmatics</a></li>
-                  <li><a href="#visucord" className="text-zinc-400 hover:text-white transition-colors">Visucord</a></li>
-                  <li><a href="#privacy" className="text-zinc-400 hover:text-white transition-colors">Privacy Policy</a></li>
-                  <li><a href="#terms" className="text-zinc-400 hover:text-white transition-colors">Terms of Service</a></li>
+                  <li><a href="/ticketmatics" className="text-zinc-400 hover:text-white transition-colors">Ticketmatics</a></li>
+                  <li><a href="/visucord" className="text-zinc-400 hover:text-white transition-colors">Visucord</a></li>
+                  <li><a href="/privacy" className="text-zinc-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                  <li><a href="/terms" className="text-zinc-400 hover:text-white transition-colors">Terms of Service</a></li>
                 </ul>
               </div>
             </div>
@@ -216,15 +287,15 @@ export default function Home() {
               © {new Date().getFullYear()} Darave Studios. All rights reserved.
             </p>
             <div className="flex gap-8">
-              <a href="#terms" className="text-[10px] text-zinc-700 hover:text-zinc-400 uppercase tracking-widest transition-colors">Terms</a>
-              <a href="#privacy" className="text-[10px] text-zinc-700 hover:text-zinc-400 uppercase tracking-widest transition-colors">Privacy</a>
+              <a href="/terms" className="text-[10px] text-zinc-700 hover:text-zinc-400 uppercase tracking-widest transition-colors">Terms</a>
+              <a href="/privacy" className="text-[10px] text-zinc-700 hover:text-zinc-400 uppercase tracking-widest transition-colors">Privacy</a>
             </div>
           </div>
         </div>
       </footer>
 
       {/* Modals */}
-      <RegistrationModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+      <AuthModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
     </div>
   );

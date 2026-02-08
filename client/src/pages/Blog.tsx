@@ -1,9 +1,28 @@
 import { motion } from "framer-motion";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@shared/routes";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Blog() {
-  const blogPosts = [
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  // Fetch blog posts from API
+  const { data: blogPosts, isLoading, error } = useQuery({
+    queryKey: ["blogPosts"],
+    queryFn: async () => {
+      const res = await fetch(api.blog.list.path);
+      if (!res.ok) throw new Error("Failed to fetch blog posts");
+      return res.json();
+    },
+  });
+
+  // Fallback data if API fails
+  const fallbackPosts = [
     {
       id: 1,
       title: "Building Scalable Discord Bots: Best Practices",
@@ -66,6 +85,41 @@ export default function Blog() {
     },
   ];
 
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+
+    try {
+      const res = await fetch(api.newsletter.subscribe.path, {
+        method: api.newsletter.subscribe.method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Subscription failed");
+      }
+
+      toast({
+        title: "Successfully subscribed!",
+        description: "You'll receive our latest updates and insights.",
+        className: "bg-primary text-primary-foreground border-none",
+      });
+      setEmail("");
+    } catch (error: any) {
+      toast({
+        title: "Subscription failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  const postsToDisplay = blogPosts || fallbackPosts;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -102,8 +156,19 @@ export default function Blog() {
       {/* Blog Posts Grid */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <p className="text-red-500 mb-4">Failed to load blog posts</p>
+              <p className="text-zinc-400">Showing fallback content</p>
+            </div>
+          ) : null}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
+            {postsToDisplay.map((post: any, index: number) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -160,16 +225,30 @@ export default function Blog() {
           <p className="text-xl text-zinc-400 mb-8">
             Subscribe to our newsletter for the latest updates and insights.
           </p>
-          <div className="flex gap-4 max-w-md mx-auto">
+          <form onSubmit={handleSubscribe} className="flex gap-4 max-w-md mx-auto">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               className="flex-1 px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              required
             />
-            <button className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors">
-              Subscribe
+            <button
+              type="submit"
+              disabled={isSubscribing}
+              className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isSubscribing ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Subscribing...
+                </>
+              ) : (
+                "Subscribe"
+              )}
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </div>

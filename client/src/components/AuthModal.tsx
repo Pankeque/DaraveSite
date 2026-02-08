@@ -115,8 +115,13 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               className="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
               placeholder="••••••••"
               required
-              minLength={6}
+              minLength={8}
             />
+            {!isLogin && (
+              <p className="text-xs text-zinc-500 mt-1">
+                Must be 8+ characters with uppercase, lowercase, number, and special character
+              </p>
+            )}
           </div>
 
           <div className="pt-2 space-y-4">

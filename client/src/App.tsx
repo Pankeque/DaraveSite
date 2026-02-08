@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import Ticketmatics from "@/pages/Ticketmatics";
 import Visucord from "@/pages/Visucord";
 import Blog from "@/pages/Blog";
+import BlogPost from "@/pages/BlogPost";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/ticketmatics" component={Ticketmatics} />
       <Route path="/visucord" component={Visucord} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/blog" component={Blog} />
       <Route path="/privacy" component={PrivacyPolicy} />
       <Route path="/terms" component={TermsOfService} />

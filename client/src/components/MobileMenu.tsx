@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -10,22 +11,24 @@ interface MobileMenuProps {
 // Items that appear in navbar on desktop
 const navbarItems = ["Home", "About", "Portfolio", "Blog", "Contact"];
 
-const allMenuItems = [
-  { title: "Home", href: "#home" },
-  { title: "About", href: "#about" },
-  { title: "Portfolio", href: "#portfolio" },
-  { title: "Blog", href: "/blog" },
-  { title: "Contact", href: "#contact" },
-  { title: "Ticketmatics", href: "/ticketmatics" },
-  { title: "Ticketmatics Dashboard", href: "/ticketmatics/dashboard" },
-  { title: "Visucord", href: "/visucord" },
-  { title: "Visucord Dashboard", href: "/visucord/dashboard" },
-  { title: "Privacy Policy", href: "/privacy" },
-  { title: "Terms of Service", href: "/terms" },
-];
-
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const { user } = useAuth();
+
+  // Build menu items based on authentication status
+  const allMenuItems = [
+    { title: "Home", href: "#home", requiresAuth: false },
+    { title: "About", href: "#about", requiresAuth: false },
+    { title: "Portfolio", href: "#portfolio", requiresAuth: false },
+    { title: "Blog", href: "/blog", requiresAuth: false },
+    { title: "Contact", href: "#contact", requiresAuth: false },
+    { title: "Ticketmatics", href: "/ticketmatics", requiresAuth: false },
+    { title: "Ticketmatics Dashboard", href: "/ticketmatics/dashboard", requiresAuth: true },
+    { title: "Visucord", href: "/visucord", requiresAuth: false },
+    { title: "Visucord Dashboard", href: "/visucord/dashboard", requiresAuth: true },
+    { title: "Privacy Policy", href: "/privacy", requiresAuth: false },
+    { title: "Terms of Service", href: "/terms", requiresAuth: false },
+  ];
 
   useEffect(() => {
     const checkMobile = () => {
@@ -49,10 +52,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     };
   }, [isOpen]);
 
-  // Filter menu items based on screen size
-  const menuItems = isMobile
+  // Filter menu items based on screen size and authentication
+  const menuItems = (isMobile
     ? allMenuItems
-    : allMenuItems.filter(item => !navbarItems.includes(item.title));
+    : allMenuItems.filter(item => !navbarItems.includes(item.title))
+  ).filter(item => !item.requiresAuth || user);
 
   return (
     <AnimatePresence>

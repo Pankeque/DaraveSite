@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, Twitter, Gamepad2, Disc, Menu, ExternalLink, User, LogOut } from "lucide-react";
+import { Twitter, Menu, ExternalLink, User, LogOut } from "lucide-react";
+import { SiDiscord, SiRoblox, SiX } from "react-icons/si";
 import { AuthModal } from "@/components/AuthModal";
 import { RippleBackground } from "@/components/RippleBackground";
 import { MarqueeServices } from "@/components/MarqueeServices";
@@ -26,7 +27,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-black font-sans overflow-x-hidden">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 flex justify-between items-center mix-blend-difference">
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 md:px-12 flex justify-between items-center mix-blend-difference">
         <div className="flex items-center gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -126,10 +127,10 @@ export default function Home() {
             </motion.button>
           )}
 
-          {/* Mobile Toggle */}
+          {/* Menu Toggle - Now visible on all devices */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="md:hidden p-2 text-white hover:text-primary transition-colors"
+            className="p-2 text-white hover:text-primary transition-colors"
           >
             <Menu className="w-8 h-8" />
           </button>
@@ -158,24 +159,10 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-zinc-400 text-sm md:text-xl uppercase tracking-widest font-medium mb-12"
+            className="text-zinc-400 text-sm md:text-xl uppercase tracking-widest font-medium"
           >
             Currently available for networking worldwide
           </motion.p>
-
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 20 }}
-          >
-            <button 
-              className="group relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-primary hover:border-primary transition-all duration-300"
-              aria-label="Play Reel"
-            >
-              <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-current group-hover:text-black transition-colors duration-300 ml-1" />
-              <div className="absolute inset-0 rounded-full border border-white/10 scale-125 opacity-0 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500" />
-            </button>
-          </motion.div>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -206,9 +193,9 @@ export default function Home() {
           
           <div className="flex flex-col gap-6 md:items-end">
             <div className="flex gap-4">
-              <SocialLink href="#" icon={<Disc className="w-5 h-5" />} label="Discord" />
-              <SocialLink href="#" icon={<Gamepad2 className="w-5 h-5" />} label="Roblox" />
-              <SocialLink href="#" icon={<Twitter className="w-5 h-5" />} label="Twitter" />
+              <SocialLink href="https://discord.gg/guCqacvEc" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
+              <SocialLink href="https://www.roblox.com/share/g/35946997" icon={<SiRoblox className="w-5 h-5" />} label="Roblox" />
+              <SocialLink href="https://x.com/DaraveStudios" icon={<SiX className="w-5 h-5" />} label="Twitter" />
             </div>
           </div>
         </div>
@@ -222,24 +209,30 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((id) => (
-            <motion.div
-              key={id}
-              whileHover={{ y: -10 }}
-              className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Gamepad2 className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Application {id}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-              <a href="#" className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider group/link">
-                View Project <ExternalLink className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-              </a>
-            </motion.div>
-          ))}
+          <PortfolioCard
+            title="Ladrões"
+            description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
+            link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
+            icon={<SiRoblox className="w-6 h-6 text-primary" />}
+          />
+          <PortfolioCard
+            title="Animation Package Catalog"
+            description="A comprehensive catalog of animation packages for Roblox, featuring high-quality character animations and movements."
+            link="https://www.roblox.com/pt/games/137596460407088/Animation-Package-Catalog"
+            icon={<SiRoblox className="w-6 h-6 text-primary" />}
+          />
+          <PortfolioCard
+            title="Ticketmatics"
+            description="Professional Discord ticket management bot with advanced features for support teams and community management."
+            link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+            icon={<SiDiscord className="w-6 h-6 text-primary" />}
+          />
+          <PortfolioCard
+            title="Visucord"
+            description="Comprehensive Discord statistics and analytics bot providing deep insights into server activity and member engagement."
+            link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
+            icon={<SiDiscord className="w-6 h-6 text-primary" />}
+          />
         </div>
       </section>
 
@@ -253,9 +246,9 @@ export default function Home() {
                 Pushing the boundaries of game development and asset creation since 2024.
               </p>
               <div className="flex gap-4">
-                <SocialLink href="#" icon={<Disc className="w-5 h-5" />} label="Discord" />
-                <SocialLink href="#" icon={<Gamepad2 className="w-5 h-5" />} label="Roblox" />
-                <SocialLink href="#" icon={<Twitter className="w-5 h-5" />} label="Twitter" />
+                <SocialLink href="https://discord.gg/guCqacvEc" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
+                <SocialLink href="https://www.roblox.com/share/g/35946997" icon={<SiRoblox className="w-5 h-5" />} label="Roblox" />
+                <SocialLink href="https://x.com/DaraveStudios" icon={<SiX className="w-5 h-5" />} label="Twitter" />
               </div>
             </div>
 
@@ -303,8 +296,10 @@ export default function Home() {
 
 function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <a 
+    <a
       href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className="p-4 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-primary hover:border-primary hover:bg-zinc-900 transition-all duration-300 group"
       aria-label={label}
     >
@@ -312,5 +307,30 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
         {icon}
       </span>
     </a>
+  );
+}
+
+function PortfolioCard({ title, description, link, icon }: { title: string; description: string; link: string; icon: React.ReactNode }) {
+  return (
+    <motion.div
+      whileHover={{ y: -10 }}
+      className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
+    >
+      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold mb-3">{title}</h3>
+      <p className="text-zinc-500 text-sm leading-relaxed mb-6">
+        {description}
+      </p>
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider group/link"
+      >
+        View Project <ExternalLink className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+      </a>
+    </motion.div>
   );
 }

@@ -82,9 +82,14 @@ export default function Ticketmatics() {
               the most advanced ticket bot for Discord communities.
             </p>
             <div className="flex gap-4 justify-center">
-              <button className="bg-primary text-black px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-colors">
+              <a
+                href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-black px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-colors"
+              >
                 Add to Discord
-              </button>
+              </a>
               <button className="border border-zinc-700 text-white px-8 py-3 rounded-full font-bold hover:bg-zinc-900 transition-colors">
                 View Documentation
               </button>
@@ -161,9 +166,14 @@ export default function Ticketmatics() {
           <p className="text-xl text-zinc-400 mb-8">
             Join thousands of Discord servers using Ticketmatics for their support needs.
           </p>
-          <button className="bg-primary text-black px-12 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors">
+          <a
+            href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-primary text-black px-12 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors inline-block"
+          >
             Add to Discord Now
-          </button>
+          </a>
         </div>
       </section>
     </div>

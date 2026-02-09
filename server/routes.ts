@@ -1,8 +1,24 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { db } from "./db";
-import { registrations, users, insertRegistrationSchema, insertUserSchema, loginSchema, blogPosts, insertBlogPostSchema, newsletterSubscriptions, insertNewsletterSchema } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import {
+  registrations,
+  users,
+  insertRegistrationSchema,
+  insertUserSchema,
+  loginSchema,
+  blogPosts,
+  insertBlogPostSchema,
+  newsletterSubscriptions,
+  insertNewsletterSchema,
+  ticketmaticsServers,
+  ticketmaticsTickets,
+  ticketmaticsMessages,
+  visucordServers,
+  visucordStats,
+  visucordChannelStats
+} from "@shared/schema";
+import { eq, desc, and } from "drizzle-orm";
 import session from "express-session";
 import bcrypt from "bcryptjs";
 import compression from "compression";
@@ -269,6 +285,133 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       } else {
         res.status(500).json({ message: "Internal server error" });
       }
+    }
+  });
+
+  // Ticketmatics Dashboard - Get server stats
+  app.get("/api/ticketmatics/stats/:serverId", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const serverId = req.params.serverId;
+      
+      const tickets = await db.query.ticketmaticsTickets.findMany({
+        where: eq(ticketmaticsTickets.serverId, serverId),
+        orderBy: [desc(ticketmaticsTickets.createdAt)],
+      });
+
+      const totalTickets = tickets.length;
+      const openTickets = tickets.filter(t => t.status === 'open').length;
+      const closedTickets = tickets.filter(t => t.status === 'closed').length;
+      const pendingTickets = tickets.filter(t => t.status === 'pending').length;
+
+      res.status(200).json({
+        totalTickets,
+        openTickets,
+        closedTickets,
+        pendingTickets,
+        recentTickets: tickets.slice(0, 10),
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Ticketmatics Dashboard - Get all tickets for a server
+  app.get("/api/ticketmatics/tickets/:serverId", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const serverId = req.params.serverId;
+      const tickets = await db.query.ticketmaticsTickets.findMany({
+        where: eq(ticketmaticsTickets.serverId, serverId),
+        orderBy: [desc(ticketmaticsTickets.createdAt)],
+      });
+
+      res.status(200).json(tickets);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Ticketmatics Dashboard - Get ticket messages
+  app.get("/api/ticketmatics/messages/:ticketId", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const ticketId = req.params.ticketId;
+      const messages = await db.query.ticketmaticsMessages.findMany({
+        where: eq(ticketmaticsMessages.ticketId, ticketId),
+        orderBy: [desc(ticketmaticsMessages.createdAt)],
+      });
+
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Visucord Dashboard - Get server stats
+  app.get("/api/visucord/stats/:serverId", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const serverId = req.params.serverId;
+      
+      const stats = await db.query.visucordStats.findMany({
+        where: eq(visucordStats.serverId, serverId),
+        orderBy: [desc(visucordStats.date)],
+        limit: 30, // Last 30 days
+      });
+
+      const channelStats = await db.query.visucordChannelStats.findMany({
+        where: eq(visucordChannelStats.serverId, serverId),
+        orderBy: [desc(visucordChannelStats.date)],
+        limit: 10,
+      });
+
+      const latestStats = stats[0] || {
+        memberCount: 0,
+        messageCount: 0,
+        voiceMinutes: 0,
+        activeUsers: 0,
+      };
+
+      res.status(200).json({
+        currentStats: latestStats,
+        historicalStats: stats,
+        topChannels: channelStats,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Visucord Dashboard - Get channel analytics
+  app.get("/api/visucord/channels/:serverId", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const serverId = req.params.serverId;
+      const channelStats = await db.query.visucordChannelStats.findMany({
+        where: eq(visucordChannelStats.serverId, serverId),
+        orderBy: [desc(visucordChannelStats.messageCount)],
+        limit: 20,
+      });
+
+      res.status(200).json(channelStats);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 }

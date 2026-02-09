@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -34,6 +34,66 @@ export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Ticketmatics Tables
+export const ticketmaticsServers = pgTable("ticketmatics_servers", {
+  id: serial("id").primaryKey(),
+  serverId: text("server_id").notNull().unique(),
+  serverName: text("server_name").notNull(),
+  userId: integer("user_id").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const ticketmaticsTickets = pgTable("ticketmatics_tickets", {
+  id: serial("id").primaryKey(),
+  serverId: text("server_id").notNull(),
+  ticketId: text("ticket_id").notNull().unique(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  category: text("category").notNull(),
+  status: text("status").notNull(), // open, closed, pending
+  priority: text("priority").notNull(), // low, medium, high, urgent
+  assignedTo: text("assigned_to"),
+  createdAt: timestamp("created_at").defaultNow(),
+  closedAt: timestamp("closed_at"),
+});
+
+export const ticketmaticsMessages = pgTable("ticketmatics_messages", {
+  id: serial("id").primaryKey(),
+  ticketId: text("ticket_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Visucord Tables
+export const visucordServers = pgTable("visucord_servers", {
+  id: serial("id").primaryKey(),
+  serverId: text("server_id").notNull().unique(),
+  serverName: text("server_name").notNull(),
+  userId: integer("user_id").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const visucordStats = pgTable("visucord_stats", {
+  id: serial("id").primaryKey(),
+  serverId: text("server_id").notNull(),
+  memberCount: integer("member_count").notNull(),
+  messageCount: integer("message_count").notNull(),
+  voiceMinutes: integer("voice_minutes").notNull(),
+  activeUsers: integer("active_users").notNull(),
+  date: timestamp("date").defaultNow(),
+});
+
+export const visucordChannelStats = pgTable("visucord_channel_stats", {
+  id: serial("id").primaryKey(),
+  serverId: text("server_id").notNull(),
+  channelId: text("channel_id").notNull(),
+  channelName: text("channel_name").notNull(),
+  messageCount: integer("message_count").notNull(),
+  date: timestamp("date").defaultNow(),
 });
 
 export const insertRegistrationSchema = createInsertSchema(registrations).pick({
@@ -96,3 +156,13 @@ export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
 export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
 export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
+
+// Ticketmatics types
+export type TicketmaticsServer = typeof ticketmaticsServers.$inferSelect;
+export type TicketmaticsTicket = typeof ticketmaticsTickets.$inferSelect;
+export type TicketmaticsMessage = typeof ticketmaticsMessages.$inferSelect;
+
+// Visucord types
+export type VisucordServer = typeof visucordServers.$inferSelect;
+export type VisucordStats = typeof visucordStats.$inferSelect;
+export type VisucordChannelStats = typeof visucordChannelStats.$inferSelect;

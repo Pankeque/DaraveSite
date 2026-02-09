@@ -7,7 +7,7 @@ import { useLocation } from "wouter";
 
 export default function TicketmaticsDashboard() {
   const { user } = useAuth();
-  const [, navigate] = useNavigate();
+  const [, navigate] = useLocation();
 
   // Fetch dashboard stats
   const { data: stats, isLoading } = useQuery({

@@ -7,19 +7,37 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
-const menuItems = [
-  { title: "Home", href: "#" },
+// Items that appear in navbar on desktop
+const navbarItems = ["Home", "About", "Portfolio", "Blog", "Contact"];
+
+const allMenuItems = [
+  { title: "Home", href: "#home" },
   { title: "About", href: "#about" },
   { title: "Portfolio", href: "#portfolio" },
-  { title: "Blog", href: "#blog" },
+  { title: "Blog", href: "/blog" },
   { title: "Contact", href: "#contact" },
-  { title: "Ticketmatics", href: "#ticketmatics" },
-  { title: "Visucord", href: "#visucord" },
-  { title: "Privacy Policy", href: "#privacy" },
-  { title: "Terms of Service", href: "#terms" },
+  { title: "Ticketmatics", href: "/ticketmatics" },
+  { title: "Ticketmatics Dashboard", href: "/ticketmatics/dashboard" },
+  { title: "Visucord", href: "/visucord" },
+  { title: "Visucord Dashboard", href: "/visucord/dashboard" },
+  { title: "Privacy Policy", href: "/privacy" },
+  { title: "Terms of Service", href: "/terms" },
 ];
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -30,6 +48,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  // Filter menu items based on screen size
+  const menuItems = isMobile
+    ? allMenuItems
+    : allMenuItems.filter(item => !navbarItems.includes(item.title));
 
   return (
     <AnimatePresence>

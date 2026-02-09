@@ -3,11 +3,11 @@ import { BarChart3, TrendingUp, Users, Activity, Eye, PieChart } from "lucide-re
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 
 export default function VisucordDashboard() {
   const { user } = useAuth();
-  const [, navigate] = useNavigate();
+  const [, navigate] = useLocation();
 
   // Fetch dashboard stats
   const { data: stats, isLoading } = useQuery({

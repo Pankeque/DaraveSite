@@ -231,13 +231,13 @@ export default function Home() {
           <PortfolioCard
             title="Ticketmatics"
             description="Professional Discord ticket management bot with advanced features for support teams and community management."
-            link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+            link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
             icon={<SiDiscord className="w-6 h-6 text-primary" />}
           />
           <PortfolioCard
             title="Visucord"
             description="Comprehensive Discord statistics and analytics bot providing deep insights into server activity and member engagement."
-            link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
+            link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
             icon={<SiDiscord className="w-6 h-6 text-primary" />}
           />
         </div>
@@ -267,18 +267,20 @@ export default function Home() {
               <div className="space-y-6">
                 <p className="text-xs text-zinc-600 font-bold uppercase tracking-[0.2em]">Navigation</p>
                 <ul className="space-y-4">
-                  {["Home", "About", "Portfolio", "Blog", "Contact"].map(item => (
-                    <li key={item}>
-                      <a href={`#${item.toLowerCase()}`} className="text-zinc-400 hover:text-white transition-colors">{item}</a>
-                    </li>
-                  ))}
+                  <li><a href="#home" className="text-zinc-400 hover:text-white transition-colors">Home</a></li>
+                  <li><a href="#about" className="text-zinc-400 hover:text-white transition-colors">About</a></li>
+                  <li><a href="#portfolio" className="text-zinc-400 hover:text-white transition-colors">Portfolio</a></li>
+                  <li><a href="/blog" className="text-zinc-400 hover:text-white transition-colors">Blog</a></li>
+                  <li><a href="#contact" className="text-zinc-400 hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>
               <div className="space-y-6">
                 <p className="text-xs text-zinc-600 font-bold uppercase tracking-[0.2em]">Legal & Dashboards</p>
                 <ul className="space-y-4">
                   <li><a href="/ticketmatics" className="text-zinc-400 hover:text-white transition-colors">Ticketmatics</a></li>
+                  {user && <li><a href="/ticketmatics/dashboard" className="text-zinc-400 hover:text-white transition-colors">Ticketmatics Dashboard</a></li>}
                   <li><a href="/visucord" className="text-zinc-400 hover:text-white transition-colors">Visucord</a></li>
+                  {user && <li><a href="/visucord/dashboard" className="text-zinc-400 hover:text-white transition-colors">Visucord Dashboard</a></li>}
                   <li><a href="/privacy" className="text-zinc-400 hover:text-white transition-colors">Privacy Policy</a></li>
                   <li><a href="/terms" className="text-zinc-400 hover:text-white transition-colors">Terms of Service</a></li>
                 </ul>

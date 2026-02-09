@@ -1,14 +1,10 @@
 import { motion } from "framer-motion";
 import { BarChart3, TrendingUp, Users, Activity, Eye, PieChart } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Visucord() {
-  const stats = [
-    { label: "Servers Tracked", value: "2,456", icon: Activity, color: "text-blue-500" },
-    { label: "Total Members", value: "1.2M", icon: Users, color: "text-green-500" },
-    { label: "Data Points", value: "50M+", icon: BarChart3, color: "text-yellow-500" },
-    { label: "Uptime", value: "99.9%", icon: TrendingUp, color: "text-purple-500" },
-  ];
+  const { user } = useAuth();
 
   const features = [
     {
@@ -83,44 +79,23 @@ export default function Visucord() {
             </p>
             <div className="flex gap-4 justify-center">
               <a
-                href="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
+                href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary text-black px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-colors"
               >
                 Add to Discord
               </a>
-              <button className="border border-zinc-700 text-white px-8 py-3 rounded-full font-bold hover:bg-zinc-900 transition-colors">
-                View Demo
-              </button>
+              {user && (
+                <a
+                  href="/visucord/dashboard"
+                  className="border border-zinc-700 text-white px-8 py-3 rounded-full font-bold hover:bg-zinc-900 transition-colors"
+                >
+                  Open Dashboard
+                </a>
+              )}
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-12 px-6 bg-zinc-950/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="bg-zinc-900/50 border-zinc-800">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <stat.icon className={`w-8 h-8 ${stat.color}`} />
-                      <span className="text-3xl font-bold">{stat.value}</span>
-                    </div>
-                    <p className="text-sm text-zinc-400">{stat.label}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -184,14 +159,24 @@ export default function Visucord() {
           <p className="text-xl text-zinc-400 mb-8">
             Join thousands of Discord servers using Visucord to understand their communities better.
           </p>
-          <a
-            href="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-black px-12 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors inline-block"
-          >
-            Add to Discord Now
-          </a>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a
+              href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary text-black px-12 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors inline-block"
+            >
+              Add to Discord Now
+            </a>
+            {user && (
+              <a
+                href="/visucord/dashboard"
+                className="border border-zinc-700 text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-zinc-900 transition-colors inline-block"
+              >
+                Open Dashboard
+              </a>
+            )}
+          </div>
         </div>
       </section>
     </div>

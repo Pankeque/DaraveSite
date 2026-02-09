@@ -70,8 +70,3 @@ The `shared/routes.ts` file defines API contracts that both client and server co
 - **Zod**: Runtime schema validation (shared between client/server)
 - **wouter**: Lightweight React router
 - **connect-pg-simple**: PostgreSQL session store (available but not currently active in routes)
-
-### Replit-Specific Plugins
-- `@replit/vite-plugin-runtime-error-modal`: Shows runtime errors in dev
-- `@replit/vite-plugin-cartographer`: Dev tooling (dev only)
-- `@replit/vite-plugin-dev-banner`: Dev environment banner (dev only)

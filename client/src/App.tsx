@@ -4,27 +4,42 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
-import NotFound from "@/pages/not-found";
-import Home from "@/pages/Home";
-import Ticketmatics from "@/pages/Ticketmatics";
-import Visucord from "@/pages/Visucord";
-import Blog from "@/pages/Blog";
-import BlogPost from "@/pages/BlogPost";
-import PrivacyPolicy from "@/pages/PrivacyPolicy";
-import TermsOfService from "@/pages/TermsOfService";
+import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
+// Lazy load pages for better performance
+const Home = lazy(() => import("@/pages/Home"));
+const Ticketmatics = lazy(() => import("@/pages/Ticketmatics"));
+const Visucord = lazy(() => import("@/pages/Visucord"));
+const Blog = lazy(() => import("@/pages/Blog"));
+const BlogPost = lazy(() => import("@/pages/BlogPost"));
+const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+
+// Loading component
+function PageLoader() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <Loader2 className="w-8 h-8 animate-spin text-primary" />
+    </div>
+  );
+}
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/ticketmatics" component={Ticketmatics} />
-      <Route path="/visucord" component={Visucord} />
-      <Route path="/blog/:slug" component={BlogPost} />
-      <Route path="/blog" component={Blog} />
-      <Route path="/privacy" component={PrivacyPolicy} />
-      <Route path="/terms" component={TermsOfService} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<PageLoader />}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/ticketmatics" component={Ticketmatics} />
+        <Route path="/visucord" component={Visucord} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/privacy" component={PrivacyPolicy} />
+        <Route path="/terms" component={TermsOfService} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

@@ -5,6 +5,8 @@ import { registrations, users, insertRegistrationSchema, insertUserSchema, login
 import { eq, desc } from "drizzle-orm";
 import session from "express-session";
 import bcrypt from "bcryptjs";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
 
 declare module "express-session" {
   interface SessionData {
@@ -13,6 +15,30 @@ declare module "express-session" {
 }
 
 export async function registerRoutes(server: Server, app: Express): Promise<void> {
+  // Compression middleware for better performance
+  app.use(compression());
+
+  // Rate limiting for API endpoints
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: "Too many requests from this IP, please try again later.",
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // Stricter rate limiting for auth endpoints
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: "Too many authentication attempts, please try again later.",
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // Apply rate limiting to API routes
+  app.use("/api/", apiLimiter);
+
   // Session middleware
   app.use(
     session({
@@ -43,7 +69,7 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
   });
 
   // Auth - Register
-  app.post("/api/auth/register", async (req: Request, res: Response) => {
+  app.post("/api/auth/register", authLimiter, async (req: Request, res: Response) => {
     try {
       const data = insertUserSchema.parse(req.body);
       
@@ -88,7 +114,7 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
   });
 
   // Auth - Login
-  app.post("/api/auth/login", async (req: Request, res: Response) => {
+  app.post("/api/auth/login", authLimiter, async (req: Request, res: Response) => {
     try {
       const data = loginSchema.parse(req.body);
 

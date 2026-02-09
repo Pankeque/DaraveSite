@@ -32,9 +32,13 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-white font-bold text-xl tracking-tighter"
+            className="flex items-center"
           >
-            DS™
+            <img 
+              src="/logo-navbar.png" 
+              alt="Darave Studios Logo" 
+              className="h-10 w-auto"
+            />
           </motion.div>
 
           {/* Desktop Nav Links */}
@@ -149,10 +153,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex justify-center mb-6"
           >
-            <h1 className="text-5xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-white mb-6">
-              Darave <span className="text-zinc-600">Studios</span>
-            </h1>
+            <img 
+              src="/logo-hero.png" 
+              alt="Darave Studios" 
+              className="max-w-full h-auto md:max-w-3xl lg:max-w-4xl"
+            />
           </motion.div>
 
           <motion.p
@@ -241,7 +248,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
             <div className="space-y-6">
-              <div className="text-white font-bold text-3xl tracking-tighter">DS™</div>
+              <img 
+                src="/logo-navbar.png" 
+                alt="Darave Studios Logo" 
+                className="h-12 w-auto"
+              />
               <p className="text-zinc-500 max-w-sm">
                 Pushing the boundaries of game development and asset creation since 2024.
               </p>

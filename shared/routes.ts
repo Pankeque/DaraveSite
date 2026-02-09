@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertRegistrationSchema, registrations } from './schema';
+import { insertRegistrationSchema, registrations, insertUserSchema, loginSchema, users, insertBlogPostSchema, blogPosts, insertNewsletterSchema, newsletterSubscriptions } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -19,6 +19,96 @@ export const api = {
       input: insertRegistrationSchema,
       responses: {
         201: z.custom<typeof registrations.$inferSelect>(),
+        400: errorSchemas.validation,
+      },
+    },
+  },
+  auth: {
+    register: {
+      method: 'POST' as const,
+      path: '/api/auth/register' as const,
+      input: insertUserSchema,
+      responses: {
+        201: z.object({
+          user: z.object({
+            id: z.number(),
+            email: z.string(),
+            name: z.string(),
+          }),
+        }),
+        400: errorSchemas.validation,
+      },
+    },
+    login: {
+      method: 'POST' as const,
+      path: '/api/auth/login' as const,
+      input: loginSchema,
+      responses: {
+        200: z.object({
+          user: z.object({
+            id: z.number(),
+            email: z.string(),
+            name: z.string(),
+          }),
+        }),
+        401: errorSchemas.validation,
+      },
+    },
+    logout: {
+      method: 'POST' as const,
+      path: '/api/auth/logout' as const,
+      responses: {
+        200: z.object({ message: z.string() }),
+      },
+    },
+    me: {
+      method: 'GET' as const,
+      path: '/api/auth/me' as const,
+      responses: {
+        200: z.object({
+          user: z.object({
+            id: z.number(),
+            email: z.string(),
+            name: z.string(),
+          }),
+        }),
+        401: errorSchemas.validation,
+      },
+    },
+  },
+  blog: {
+    list: {
+      method: 'GET' as const,
+      path: '/api/blog' as const,
+      responses: {
+        200: z.array(z.custom<typeof blogPosts.$inferSelect>()),
+      },
+    },
+    get: {
+      method: 'GET' as const,
+      path: '/api/blog/:slug' as const,
+      responses: {
+        200: z.custom<typeof blogPosts.$inferSelect>(),
+        404: errorSchemas.internal,
+      },
+    },
+    create: {
+      method: 'POST' as const,
+      path: '/api/blog' as const,
+      input: insertBlogPostSchema,
+      responses: {
+        201: z.custom<typeof blogPosts.$inferSelect>(),
+        400: errorSchemas.validation,
+      },
+    },
+  },
+  newsletter: {
+    subscribe: {
+      method: 'POST' as const,
+      path: '/api/newsletter/subscribe' as const,
+      input: insertNewsletterSchema,
+      responses: {
+        201: z.object({ message: z.string() }),
         400: errorSchemas.validation,
       },
     },

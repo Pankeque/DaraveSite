@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { insertRegistrationSchema, registrations, insertUserSchema, loginSchema, users, insertBlogPostSchema, blogPosts, insertNewsletterSchema, newsletterSubscriptions } from './schema';
+import { 
+  insertRegistrationSchema, registrations, 
+  insertUserSchema, loginSchema, users, 
+  insertBlogPostSchema, blogPosts, 
+  insertBlogCommentSchema, blogComments,
+  insertBlogTagSchema, blogTags,
+  blogImages,
+  insertNewsletterSchema, newsletterSubscriptions 
+} from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -99,6 +107,124 @@ export const api = {
       responses: {
         201: z.custom<typeof blogPosts.$inferSelect>(),
         400: errorSchemas.validation,
+      },
+    },
+    update: {
+      method: 'PUT' as const,
+      path: '/api/blog/:id' as const,
+      input: insertBlogPostSchema.partial(),
+      responses: {
+        200: z.custom<typeof blogPosts.$inferSelect>(),
+        400: errorSchemas.validation,
+        404: errorSchemas.internal,
+      },
+    },
+    delete: {
+      method: 'DELETE' as const,
+      path: '/api/blog/:id' as const,
+      responses: {
+        200: z.object({ message: z.string() }),
+        404: errorSchemas.internal,
+      },
+    },
+    byCategory: {
+      method: 'GET' as const,
+      path: '/api/blog/category/:category' as const,
+      responses: {
+        200: z.array(z.custom<typeof blogPosts.$inferSelect>()),
+      },
+    },
+    search: {
+      method: 'GET' as const,
+      path: '/api/blog/search/:query' as const,
+      responses: {
+        200: z.array(z.custom<typeof blogPosts.$inferSelect>()),
+      },
+    },
+    comments: {
+      list: {
+        method: 'GET' as const,
+        path: '/api/blog/:slug/comments' as const,
+        responses: {
+          200: z.array(z.custom<typeof blogComments.$inferSelect>()),
+          404: errorSchemas.internal,
+        },
+      },
+      create: {
+        method: 'POST' as const,
+        path: '/api/blog/:slug/comments' as const,
+        input: insertBlogCommentSchema,
+        responses: {
+          201: z.custom<typeof blogComments.$inferSelect>(),
+          400: errorSchemas.validation,
+          404: errorSchemas.internal,
+        },
+      },
+      delete: {
+        method: 'DELETE' as const,
+        path: '/api/blog/comments/:id' as const,
+        responses: {
+          200: z.object({ message: z.string() }),
+          404: errorSchemas.internal,
+        },
+      },
+    },
+    tags: {
+      list: {
+        method: 'GET' as const,
+        path: '/api/blog/tags' as const,
+        responses: {
+          200: z.array(z.custom<typeof blogTags.$inferSelect>()),
+        },
+      },
+      create: {
+        method: 'POST' as const,
+        path: '/api/blog/tags' as const,
+        input: insertBlogTagSchema,
+        responses: {
+          201: z.custom<typeof blogTags.$inferSelect>(),
+          400: errorSchemas.validation,
+        },
+      },
+      setForPost: {
+        method: 'POST' as const,
+        path: '/api/blog/:postId/tags' as const,
+        input: z.object({ tagIds: z.array(z.number()) }),
+        responses: {
+          200: z.object({ message: z.string() }),
+          400: errorSchemas.validation,
+        },
+      },
+    },
+    images: {
+      list: {
+        method: 'GET' as const,
+        path: '/api/blog/:postId/images' as const,
+        responses: {
+          200: z.array(z.custom<typeof blogImages.$inferSelect>()),
+        },
+      },
+      create: {
+        method: 'POST' as const,
+        path: '/api/blog/images' as const,
+        input: z.object({
+          postId: z.number().optional(),
+          url: z.string().url(),
+          alt: z.string().optional(),
+          caption: z.string().optional(),
+        }),
+        responses: {
+          201: z.custom<typeof blogImages.$inferSelect>(),
+          400: errorSchemas.validation,
+        },
+      },
+      delete: {
+        method: 'DELETE' as const,
+        path: '/api/blog/images/:id' as const,
+        responses: {
+          200: z.object({ message: z.string() }),
+          404: errorSchemas.internal,
+        },
       },
     },
   },

@@ -42,6 +42,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Helper function to sanitize error messages
+  const sanitizeErrorMessage = (message: string): string => {
+    // Check if message contains code-related content
+    if (message.includes('SyntaxError') || 
+        message.includes('ReferenceError') ||
+        message.includes('TypeError') ||
+        message.includes('at ') ||
+        message.includes('.ts:') ||
+        message.includes('.js:') ||
+        message.includes('stack') ||
+        message.includes('Error:') ||
+        message.includes('function') ||
+        message.includes('undefined') ||
+        message.includes('Cannot read')) {
+      return "A server error occurred. Please try again later.";
+    }
+    return message;
+  };
+
   const login = async (email: string, password: string) => {
     const res = await fetch(api.auth.login.path, {
       method: api.auth.login.method,
@@ -56,12 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const contentType = res.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           const error = await res.json();
-          errorMessage = error.message || errorMessage;
+          errorMessage = sanitizeErrorMessage(error.message || errorMessage);
         } else {
-          errorMessage = await res.text() || errorMessage;
+          const text = await res.text();
+          errorMessage = sanitizeErrorMessage(text || errorMessage);
         }
       } catch (e) {
         console.error("Error parsing response:", e);
+        errorMessage = "A server error occurred. Please try again later.";
       }
       throw new Error(errorMessage);
     }
@@ -84,12 +105,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const contentType = res.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           const error = await res.json();
-          errorMessage = error.message || errorMessage;
+          errorMessage = sanitizeErrorMessage(error.message || errorMessage);
         } else {
-          errorMessage = await res.text() || errorMessage;
+          const text = await res.text();
+          errorMessage = sanitizeErrorMessage(text || errorMessage);
         }
       } catch (e) {
         console.error("Error parsing response:", e);
+        errorMessage = "A server error occurred. Please try again later.";
       }
       throw new Error(errorMessage);
     }

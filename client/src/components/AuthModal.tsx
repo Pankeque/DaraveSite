@@ -44,9 +44,28 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       setPassword("");
       setName("");
     } catch (error: any) {
+      // Sanitize error message to avoid showing code/stack traces
+      let errorMessage = "An unexpected error occurred. Please try again.";
+      
+      if (error.message) {
+        // If the message looks like it contains code or stack trace, use generic message
+        if (error.message.includes('SyntaxError') || 
+            error.message.includes('ReferenceError') ||
+            error.message.includes('TypeError') ||
+            error.message.includes('at ') ||
+            error.message.includes('.ts:') ||
+            error.message.includes('.js:') ||
+            error.message.includes('stack')) {
+          errorMessage = "A server error occurred. Please try again later.";
+        } else {
+          // Use the provided message if it seems like a user-friendly message
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: isLogin ? "Login failed" : "Registration failed",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

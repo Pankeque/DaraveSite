@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS "newsletter_subscriptions" (
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS "idx_users_email" ON "users" ("email");
+CREATE INDEX IF NOT EXISTS "idx_registrations_email" ON "registrations" ("email");
 CREATE INDEX IF NOT EXISTS "idx_blog_posts_slug" ON "blog_posts" ("slug");
 CREATE INDEX IF NOT EXISTS "idx_blog_posts_created_at" ON "blog_posts" ("created_at");
+CREATE INDEX IF NOT EXISTS "idx_blog_posts_category" ON "blog_posts" ("category");
 CREATE INDEX IF NOT EXISTS "idx_newsletter_email" ON "newsletter_subscriptions" ("email");

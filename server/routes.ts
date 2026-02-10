@@ -9,6 +9,13 @@ import {
   loginSchema,
   blogPosts,
   insertBlogPostSchema,
+  blogComments,
+  insertBlogCommentSchema,
+  blogTags,
+  insertBlogTagSchema,
+  blogPostTags,
+  blogImages,
+  insertBlogImageSchema,
   newsletterSubscriptions,
   insertNewsletterSchema,
   ticketmaticsServers,
@@ -18,7 +25,7 @@ import {
   visucordStats,
   visucordChannelStats
 } from "@shared/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, inArray, sql } from "drizzle-orm";
 import session from "express-session";
 import bcrypt from "bcryptjs";
 import compression from "compression";
@@ -252,7 +259,10 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
         return res.status(400).json({ message: "A post with this slug already exists" });
       }
 
-      const [post] = await db.insert(blogPosts).values(data).returning();
+      const [post] = await db.insert(blogPosts).values({
+        ...data,
+        authorId: req.session.userId,
+      }).returning();
       res.status(201).json(post);
     } catch (error: any) {
       if (error.name === "ZodError") {
@@ -260,6 +270,303 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       } else {
         res.status(500).json({ message: "Internal server error" });
       }
+    }
+  });
+
+  // Blog - Update post (protected route - requires authentication)
+  app.put("/api/blog/:id", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const postId = parseInt(req.params.id);
+      const data = insertBlogPostSchema.partial().parse(req.body);
+      
+      const [updatedPost] = await db
+        .update(blogPosts)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(blogPosts.id, postId))
+        .returning();
+
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+
+      res.status(200).json(updatedPost);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Blog - Delete post (protected route - requires authentication)
+  app.delete("/api/blog/:id", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const postId = parseInt(req.params.id);
+      
+      const [deletedPost] = await db
+        .delete(blogPosts)
+        .where(eq(blogPosts.id, postId))
+        .returning();
+
+      if (!deletedPost) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+
+      res.status(200).json({ message: "Blog post deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Comments - Get comments for a post
+  app.get("/api/blog/:slug/comments", async (req: Request, res: Response) => {
+    try {
+      const slug = req.params.slug;
+      
+      const post = await db.query.blogPosts.findFirst({
+        where: eq(blogPosts.slug, slug),
+      });
+
+      if (!post) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+
+      const comments = await db.query.blogComments.findMany({
+        where: and(
+          eq(blogComments.postId, post.id),
+          eq(blogComments.approved, true)
+        ),
+        orderBy: [desc(blogComments.createdAt)],
+      });
+
+      res.status(200).json(comments);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Comments - Create comment
+  app.post("/api/blog/:slug/comments", async (req: Request, res: Response) => {
+    try {
+      const slug = req.params.slug;
+      
+      const post = await db.query.blogPosts.findFirst({
+        where: eq(blogPosts.slug, slug),
+      });
+
+      if (!post) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+
+      const data = insertBlogCommentSchema.parse({
+        ...req.body,
+        postId: post.id,
+        userId: req.session.userId || null,
+      });
+
+      // Validate that either userId or guest info is provided
+      if (!data.userId && (!data.guestName || !data.guestEmail)) {
+        return res.status(400).json({ message: "Please provide your name and email" });
+      }
+
+      const [comment] = await db.insert(blogComments).values(data).returning();
+      res.status(201).json(comment);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Blog Comments - Delete comment (protected route)
+  app.delete("/api/blog/comments/:id", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const commentId = parseInt(req.params.id);
+      
+      const [deletedComment] = await db
+        .delete(blogComments)
+        .where(eq(blogComments.id, commentId))
+        .returning();
+
+      if (!deletedComment) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+
+      res.status(200).json({ message: "Comment deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Tags - Get all tags
+  app.get("/api/blog/tags", async (req: Request, res: Response) => {
+    try {
+      const tags = await db.query.blogTags.findMany();
+      res.status(200).json(tags);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Tags - Create tag (protected route)
+  app.post("/api/blog/tags", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const data = insertBlogTagSchema.parse(req.body);
+      
+      const [tag] = await db.insert(blogTags).values(data).returning();
+      res.status(201).json(tag);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Blog Tags - Associate tags with post (protected route)
+  app.post("/api/blog/:postId/tags", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const postId = parseInt(req.params.postId);
+      const { tagIds } = req.body;
+
+      if (!Array.isArray(tagIds)) {
+        return res.status(400).json({ message: "tagIds must be an array" });
+      }
+
+      // Delete existing tag associations
+      await db.delete(blogPostTags).where(eq(blogPostTags.postId, postId));
+
+      // Create new associations
+      if (tagIds.length > 0) {
+        const values = tagIds.map(tagId => ({ postId, tagId }));
+        await db.insert(blogPostTags).values(values);
+      }
+
+      res.status(200).json({ message: "Tags updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Images - Upload image (protected route)
+  app.post("/api/blog/images", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const data = insertBlogImageSchema.parse({
+        ...req.body,
+        uploadedBy: req.session.userId,
+      });
+
+      const [image] = await db.insert(blogImages).values(data).returning();
+      res.status(201).json(image);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Blog Images - Get images for a post
+  app.get("/api/blog/:postId/images", async (req: Request, res: Response) => {
+    try {
+      const postId = parseInt(req.params.postId);
+      
+      const images = await db.query.blogImages.findMany({
+        where: eq(blogImages.postId, postId),
+        orderBy: [desc(blogImages.createdAt)],
+      });
+
+      res.status(200).json(images);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog Images - Delete image (protected route)
+  app.delete("/api/blog/images/:id", async (req: Request, res: Response) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const imageId = parseInt(req.params.id);
+      
+      const [deletedImage] = await db
+        .delete(blogImages)
+        .where(eq(blogImages.id, imageId))
+        .returning();
+
+      if (!deletedImage) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+
+      res.status(200).json({ message: "Image deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog - Get posts by category
+  app.get("/api/blog/category/:category", async (req: Request, res: Response) => {
+    try {
+      const category = req.params.category;
+      
+      const posts = await db.query.blogPosts.findMany({
+        where: and(
+          eq(blogPosts.category, category),
+          eq(blogPosts.published, true)
+        ),
+        orderBy: [desc(blogPosts.createdAt)],
+      });
+
+      res.status(200).json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Blog - Search posts
+  app.get("/api/blog/search/:query", async (req: Request, res: Response) => {
+    try {
+      const query = req.params.query;
+      
+      const posts = await db.query.blogPosts.findMany({
+        where: sql`${blogPosts.title} ILIKE ${`%${query}%`} OR ${blogPosts.content} ILIKE ${`%${query}%`} OR ${blogPosts.excerpt} ILIKE ${`%${query}%`}`,
+        orderBy: [desc(blogPosts.createdAt)],
+      });
+
+      res.status(200).json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 

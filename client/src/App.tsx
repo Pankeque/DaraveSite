@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("@/pages/Home"));
+const Form = lazy(() => import("@/pages/Form"));
 const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -27,6 +28,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/form" component={Form} />
         <Route path="/privacy" component={PrivacyPolicy} />
         <Route path="/terms" component={TermsOfService} />
         <Route component={NotFound} />

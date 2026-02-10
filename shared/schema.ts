@@ -63,3 +63,52 @@ export type User = typeof users.$inferSelect;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
 export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
+
+// Game Form Schema
+export const gameSubmissions = pgTable("game_submissions", {
+  id: serial("id").primaryKey(),
+  gameName: text("game_name").notNull(),
+  gameLink: text("game_link").notNull(),
+  dailyActiveUsers: text("daily_active_users"),
+  totalVisits: text("total_visits"),
+  revenue: text("revenue"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Assets Form Schema
+export const assetSubmissions = pgTable("asset_submissions", {
+  id: serial("id").primaryKey(),
+  assetsCount: text("assets_count"),
+  assetLinks: text("asset_links"),
+  additionalNotes: text("additional_notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertGameSubmissionSchema = createInsertSchema(gameSubmissions).pick({
+  gameName: true,
+  gameLink: true,
+  dailyActiveUsers: true,
+  totalVisits: true,
+  revenue: true,
+}).extend({
+  gameName: z.string().min(1, "Game name is required"),
+  gameLink: z.string().url("Please enter a valid URL"),
+  dailyActiveUsers: z.string().optional(),
+  totalVisits: z.string().optional(),
+  revenue: z.string().optional(),
+});
+
+export const insertAssetSubmissionSchema = createInsertSchema(assetSubmissions).pick({
+  assetsCount: true,
+  assetLinks: true,
+  additionalNotes: true,
+}).extend({
+  assetsCount: z.string().optional(),
+  assetLinks: z.string().optional(),
+  additionalNotes: z.string().optional(),
+});
+
+export type GameSubmission = typeof gameSubmissions.$inferSelect;
+export type InsertGameSubmission = z.infer<typeof insertGameSubmissionSchema>;
+export type AssetSubmission = typeof assetSubmissions.$inferSelect;
+export type InsertAssetSubmission = z.infer<typeof insertAssetSubmissionSchema>;

@@ -62,6 +62,11 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
+  // Catch-all for unmatched API routes - return JSON 404 instead of HTML
+  app.use("/api", (_req: Request, res: Response) => {
+    res.status(404).json({ message: "API endpoint not found" });
+  });
+
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -75,6 +80,13 @@ app.use((req, res, next) => {
 
     // In production, don't expose internal error details
     const isDev = process.env.NODE_ENV !== "production";
+    
+    // Always return JSON for API routes
+    if (_req.path.startsWith("/api")) {
+      return res.status(status).json({ 
+        message: status === 500 && !isDev ? "Internal Server Error" : message,
+      });
+    }
     
     return res.status(status).json({ 
       message: status === 500 && !isDev ? "Internal Server Error" : message,

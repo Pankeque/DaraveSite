@@ -179,9 +179,7 @@ export default function TicketmaticsDashboard() {
                 Start managing support tickets efficiently with our powerful bot
               </CardDescription>
               <a
-                href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://discord.com/oauth2/authorize?client_id=1408807066465865778&redirect_uri=https%3A%2F%2Fdarave.studio%2Fticketmatics%2Fdashboard&response_type=code&scope=bot%20applications.commands"
                 className="inline-block bg-primary text-black px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-colors"
               >
                 Add to Discord

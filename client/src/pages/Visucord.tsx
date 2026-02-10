@@ -81,21 +81,19 @@ export default function Visucord() {
             </p>
             <div className="flex gap-4 justify-center">
               <a
-                href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+                href="https://discord.com/oauth2/authorize?client_id=1467926916119007520&redirect_uri=https%3A%2F%2Fdarave.studio%2Fvisucord%2Fdashboard&response_type=code&scope=bot%20applications.commands"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary text-black px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-colors"
               >
                 Add to Discord
               </a>
-              {user && (
-                <a
-                  href="/visucord/dashboard"
-                  className="border border-zinc-700 text-white px-8 py-3 rounded-full font-bold hover:bg-zinc-900 transition-colors"
-                >
-                  Open Dashboard
-                </a>
-              )}
+              <a
+                href="/visucord/dashboard"
+                className="border border-zinc-700 text-white px-8 py-3 rounded-full font-bold hover:bg-zinc-900 transition-colors"
+              >
+                Open Dashboard
+              </a>
             </div>
           </motion.div>
         </div>
@@ -163,21 +161,19 @@ export default function Visucord() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
-              href="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+              href="https://discord.com/oauth2/authorize?client_id=1467926916119007520&redirect_uri=https%3A%2F%2Fdarave.studio%2Fvisucord%2Fdashboard&response_type=code&scope=bot%20applications.commands"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary text-black px-12 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors inline-block"
             >
               Add to Discord Now
             </a>
-            {user && (
-              <a
-                href="/visucord/dashboard"
-                className="border border-zinc-700 text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-zinc-900 transition-colors inline-block"
-              >
-                Open Dashboard
-              </a>
-            )}
+            <a
+              href="/visucord/dashboard"
+              className="border border-zinc-700 text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-zinc-900 transition-colors inline-block"
+            >
+              Open Dashboard
+            </a>
           </div>
         </div>
       </section>

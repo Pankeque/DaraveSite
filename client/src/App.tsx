@@ -10,12 +10,7 @@ import { Loader2 } from "lucide-react";
 // Lazy load pages for better performance
 const Home = lazy(() => import("@/pages/Home"));
 const Ticketmatics = lazy(() => import("@/pages/Ticketmatics"));
-const TicketmaticsDashboard = lazy(() => import("@/pages/TicketmaticsDashboard"));
 const Visucord = lazy(() => import("@/pages/Visucord"));
-const VisucordDashboard = lazy(() => import("@/pages/VisucordDashboard"));
-const Blog = lazy(() => import("@/pages/Blog"));
-const BlogPost = lazy(() => import("@/pages/BlogPost"));
-const BlogAdmin = lazy(() => import("@/pages/BlogAdmin"));
 const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -35,12 +30,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/ticketmatics" component={Ticketmatics} />
-        <Route path="/ticketmatics/dashboard" component={TicketmaticsDashboard} />
         <Route path="/visucord" component={Visucord} />
-        <Route path="/visucord/dashboard" component={VisucordDashboard} />
-        <Route path="/blog/admin" component={BlogAdmin} />
-        <Route path="/blog/:slug" component={BlogPost} />
-        <Route path="/blog" component={Blog} />
         <Route path="/privacy" component={PrivacyPolicy} />
         <Route path="/terms" component={TermsOfService} />
         <Route component={NotFound} />

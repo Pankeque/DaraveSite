@@ -65,76 +65,6 @@ export default function Blog() {
     }
   };
 
-  // Fallback data if API fails
-  const fallbackPosts = [
-    {
-      id: 1,
-      title: "Building Scalable Discord Bots: Best Practices",
-      excerpt: "Learn how to build Discord bots that can handle millions of users without breaking a sweat.",
-      author: "Darave Studios",
-      createdAt: "2026-02-01",
-      readTime: "5 min read",
-      category: "Development",
-      slug: "building-scalable-discord-bots",
-      featuredImage: null,
-    },
-    {
-      id: 2,
-      title: "The Future of Game Development on Roblox",
-      excerpt: "Exploring the latest trends and technologies shaping the future of Roblox game development.",
-      author: "Darave Studios",
-      createdAt: "2026-01-28",
-      readTime: "8 min read",
-      category: "Gaming",
-      slug: "future-of-roblox-development",
-      featuredImage: null,
-    },
-    {
-      id: 3,
-      title: "Optimizing Performance in Large-Scale Applications",
-      excerpt: "Tips and tricks for keeping your applications fast and responsive as they grow.",
-      author: "Darave Studios",
-      createdAt: "2026-01-25",
-      readTime: "6 min read",
-      category: "Development",
-      slug: "optimizing-performance",
-      featuredImage: null,
-    },
-    {
-      id: 4,
-      title: "Community Management: Lessons Learned",
-      excerpt: "Our experience managing large gaming communities and what we've learned along the way.",
-      author: "Darave Studios",
-      createdAt: "2026-01-20",
-      readTime: "7 min read",
-      category: "Community",
-      slug: "community-management-lessons",
-      featuredImage: null,
-    },
-    {
-      id: 5,
-      title: "Introduction to Discord Bot Analytics",
-      excerpt: "Understanding your bot's usage patterns and making data-driven decisions.",
-      author: "Darave Studios",
-      createdAt: "2026-01-15",
-      readTime: "5 min read",
-      category: "Analytics",
-      slug: "discord-bot-analytics",
-      featuredImage: null,
-    },
-    {
-      id: 6,
-      title: "Creating Engaging User Experiences",
-      excerpt: "Design principles for creating applications that users love to interact with.",
-      author: "Darave Studios",
-      createdAt: "2026-01-10",
-      readTime: "6 min read",
-      category: "Design",
-      slug: "engaging-user-experiences",
-      featuredImage: null,
-    },
-  ];
-
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubscribing(true);
@@ -169,9 +99,9 @@ export default function Blog() {
   };
 
   // Get unique categories from posts
-  const categories = [...new Set((blogPosts || fallbackPosts).map((post: any) => post.category))];
+  const categories = blogPosts ? [...new Set(blogPosts.map((post: any) => post.category))] : [];
 
-  const postsToDisplay = blogPosts || fallbackPosts;
+  const postsToDisplay = blogPosts || [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -270,14 +200,27 @@ export default function Blog() {
           ) : error ? (
             <div className="text-center py-20">
               <p className="text-red-500 mb-4">Failed to load blog posts</p>
-              <p className="text-zinc-400">Showing fallback content</p>
+              <Button onClick={() => refetch()} variant="outline" className="border-zinc-700">
+                Try Again
+              </Button>
             </div>
-          ) : null}
-          
-          {postsToDisplay.length === 0 ? (
+          ) : postsToDisplay.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-zinc-400 text-lg">No posts found</p>
-              <p className="text-zinc-500 text-sm mt-2">Try adjusting your search or filter</p>
+              <div className="max-w-md mx-auto">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-zinc-800/50 flex items-center justify-center">
+                  <Tag className="w-10 h-10 text-zinc-600" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">No posts yet</h3>
+                <p className="text-zinc-400 text-lg mb-6">
+                  We're working on creating amazing content for you. Check back soon for updates!
+                </p>
+                <a
+                  href="/"
+                  className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                >
+                  ← Back to Home
+                </a>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

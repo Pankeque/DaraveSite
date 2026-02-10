@@ -143,9 +143,22 @@ export default function Home() {
 
       {/* Hero Section */}
       <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: "url('/image-principal-landpage.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 z-[1] bg-black/40" />
+        
         <RippleBackground />
         
-        <motion.div 
+        <motion.div
           style={{ opacity: heroOpacity, scale: heroScale }}
           className="relative z-10 text-center px-4"
         >

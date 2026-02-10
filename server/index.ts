@@ -66,13 +66,21 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    // Log the full error for debugging (server-side only)
     console.error("Internal Server Error:", err);
 
     if (res.headersSent) {
       return next(err);
     }
 
-    return res.status(status).json({ message });
+    // In production, don't expose internal error details
+    const isDev = process.env.NODE_ENV !== "production";
+    
+    return res.status(status).json({ 
+      message: status === 500 && !isDev ? "Internal Server Error" : message,
+      // Only include stack trace in development
+      ...(isDev && err.stack ? { stack: err.stack } : {})
+    });
   });
 
   // importantly only setup vite in development and after

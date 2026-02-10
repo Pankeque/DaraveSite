@@ -9,6 +9,10 @@ import {
   loginSchema,
   newsletterSubscriptions,
   insertNewsletterSchema,
+  gameSubmissions,
+  insertGameSubmissionSchema,
+  assetSubmissions,
+  insertAssetSubmissionSchema,
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import session from "express-session";
@@ -266,6 +270,44 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       if (error.name === "ZodError") {
         res.status(400).json({ message: error.errors[0].message });
       } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Game Submission endpoint
+  app.post("/api/submissions/games", async (req: Request, res: Response) => {
+    try {
+      const data = insertGameSubmissionSchema.parse(req.body);
+      const [submission] = await db.insert(gameSubmissions).values(data).returning();
+      res.status(201).json({
+        message: "Game metrics submitted successfully",
+        submission
+      });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        console.error("[ERROR] Game submission error:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Asset Submission endpoint
+  app.post("/api/submissions/assets", async (req: Request, res: Response) => {
+    try {
+      const data = insertAssetSubmissionSchema.parse(req.body);
+      const [submission] = await db.insert(assetSubmissions).values(data).returning();
+      res.status(201).json({
+        message: "Assets submitted successfully",
+        submission
+      });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        console.error("[ERROR] Asset submission error:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     }

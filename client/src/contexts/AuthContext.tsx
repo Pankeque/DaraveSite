@@ -51,8 +51,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Login failed");
+      let errorMessage = "Login failed";
+      try {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const error = await res.json();
+          errorMessage = error.message || errorMessage;
+        } else {
+          errorMessage = await res.text() || errorMessage;
+        }
+      } catch (e) {
+        console.error("Error parsing response:", e);
+      }
+      throw new Error(errorMessage);
     }
 
     const data = await res.json();
@@ -68,8 +79,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Registration failed");
+      let errorMessage = "Registration failed";
+      try {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const error = await res.json();
+          errorMessage = error.message || errorMessage;
+        } else {
+          errorMessage = await res.text() || errorMessage;
+        }
+      } catch (e) {
+        console.error("Error parsing response:", e);
+      }
+      throw new Error(errorMessage);
     }
 
     const data = await res.json();

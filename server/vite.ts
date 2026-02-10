@@ -34,6 +34,11 @@ export async function setupVite(server: Server, app: Express) {
   app.use("/{*path}", async (req, res, next) => {
     const url = req.originalUrl;
 
+    // Don't serve HTML for API routes - they should return 404 JSON
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ message: "API endpoint not found" });
+    }
+
     try {
       const clientTemplate = path.resolve(
         import.meta.dirname,

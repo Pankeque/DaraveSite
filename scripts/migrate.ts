@@ -41,6 +41,12 @@ async function runMigrations() {
         email TEXT NOT NULL UNIQUE,
         created_at TIMESTAMP DEFAULT NOW()
       );
+      
+      -- Create indexes for initial tables
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
+      CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts (slug);
+      CREATE INDEX IF NOT EXISTS idx_blog_posts_created_at ON blog_posts (created_at);
+      CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscriptions (email);
     `);
     console.log('0000_initial_schema completed.');
 
@@ -166,6 +172,31 @@ async function runMigrations() {
       CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
     `);
     console.log('0002_blog_system completed.');
+
+    // Migration 0003 - Session table for authentication
+    console.log('Running 0003_session_table...');
+    await db.execute(sql`
+      -- Create session table for connect-pg-simple
+      CREATE TABLE IF NOT EXISTS session (
+        sid VARCHAR NOT NULL COLLATE "default",
+        sess JSON NOT NULL,
+        expire TIMESTAMP(6) NOT NULL
+      );
+      
+      -- Add primary key constraint if not exists
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'session_pkey'
+        ) THEN
+          ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid);
+        END IF;
+      END $$;
+      
+      -- Create index for session expiration
+      CREATE INDEX IF NOT EXISTS IDX_session_expire ON session(expire);
+    `);
+    console.log('0003_session_table completed.');
 
     console.log('All migrations completed successfully!');
     process.exit(0);

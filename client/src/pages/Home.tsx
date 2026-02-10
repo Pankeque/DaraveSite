@@ -71,7 +71,7 @@ export default function Home() {
               Portfolio
             </motion.a>
             <motion.a
-              href="#form"
+              href="/form"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -228,7 +228,7 @@ export default function Home() {
           <p className="text-zinc-500 uppercase tracking-widest text-sm">Featured Applications</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <PortfolioCard
             title="Robbers"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
@@ -241,119 +241,18 @@ export default function Home() {
             link="https://www.roblox.com/pt/games/137596460407088/Animation-Package-Catalog"
             image="/portfolio-animation.png"
           />
-        </div>
-      </section>
-
-      {/* Form Section */}
-      <section id="form" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-zinc-900">
-        <div className="mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">Submit Your Metrics</h2>
-          <p className="text-zinc-500 uppercase tracking-widest text-sm">Game Metrics & Assets Form</p>
-        </div>
-
-        <div className="max-w-2xl mx-auto">
-          <form className="space-y-8">
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                Game Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your game name"
-                className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              />
-            </div>
-
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                Game Link
-              </label>
-              <input
-                type="url"
-                placeholder="https://www.roblox.com/games/..."
-                className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                  Daily Active Users
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 1000"
-                  className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                  Total Visits
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 50000"
-                  className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                  Revenue (Robux)
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 10000"
-                  className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                  Assets Count
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 25"
-                  className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                Asset Links
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Paste your asset links here (one per line)"
-                className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none"
-              />
-            </div>
-
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
-                Additional Notes
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Any additional information about your game or assets..."
-                className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none"
-              />
-            </div>
-
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-primary text-black px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase hover:shadow-[0_0_20px_rgba(163,255,0,0.4)] transition-shadow duration-300"
-            >
-              Submit Metrics
-            </motion.button>
-          </form>
+          <PortfolioCard
+            title="Ticketmatics"
+            description="Professional Discord ticket management bot with advanced features for support teams and community management."
+            link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
+            image="/portfolio-ticketmatics.png"
+          />
+          <PortfolioCard
+            title="Visucord"
+            description="Comprehensive Discord statistics and analytics bot providing deep insights into server activity and member engagement."
+            link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
+            image="/portfolio-visucord.png"
+          />
         </div>
       </section>
 
@@ -384,7 +283,7 @@ export default function Home() {
                   <li><a href="#home" className="text-zinc-400 hover:text-white transition-colors">Home</a></li>
                   <li><a href="#about" className="text-zinc-400 hover:text-white transition-colors">About</a></li>
                   <li><a href="#portfolio" className="text-zinc-400 hover:text-white transition-colors">Portfolio</a></li>
-                  <li><a href="#form" className="text-zinc-400 hover:text-white transition-colors">Form</a></li>
+                  <li><a href="/form" className="text-zinc-400 hover:text-white transition-colors">Form</a></li>
                   <li><a href="#contact" className="text-zinc-400 hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>

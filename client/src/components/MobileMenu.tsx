@@ -20,7 +20,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     { title: "Home", href: "#home", requiresAuth: false },
     { title: "About", href: "#about", requiresAuth: false },
     { title: "Portfolio", href: "#portfolio", requiresAuth: false },
-    { title: "Form", href: "#form", requiresAuth: false },
+    { title: "Form", href: "/form", requiresAuth: false },
     { title: "Contact", href: "#contact", requiresAuth: false },
     { title: "Privacy Policy", href: "/privacy", requiresAuth: false },
     { title: "Terms of Service", href: "/terms", requiresAuth: false },

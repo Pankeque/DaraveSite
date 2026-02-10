@@ -230,7 +230,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <PortfolioCard
-            title="Ladrões"
+            title="Robbers"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
             link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
             image="/portfolio-ladroes.png"

@@ -45,9 +45,11 @@ export default function Visucord() {
       <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-primary" />
-            </div>
+            <img 
+              src="/portfolio-visucord.png" 
+              alt="Visucord Logo" 
+              className="w-10 h-10 rounded-lg object-cover"
+            />
             <div>
               <h1 className="text-xl font-bold">Visucord</h1>
               <p className="text-xs text-zinc-500">Discord Statistics Bot</p>

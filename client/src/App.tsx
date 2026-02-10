@@ -9,8 +9,6 @@ import { Loader2 } from "lucide-react";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("@/pages/Home"));
-const Ticketmatics = lazy(() => import("@/pages/Ticketmatics"));
-const Visucord = lazy(() => import("@/pages/Visucord"));
 const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -29,8 +27,6 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/ticketmatics" component={Ticketmatics} />
-        <Route path="/visucord" component={Visucord} />
         <Route path="/privacy" component={PrivacyPolicy} />
         <Route path="/terms" component={TermsOfService} />
         <Route component={NotFound} />

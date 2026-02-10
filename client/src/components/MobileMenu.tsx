@@ -9,7 +9,7 @@ interface MobileMenuProps {
 }
 
 // Items that appear in navbar on desktop
-const navbarItems = ["Home", "About", "Portfolio", "Blog", "Contact"];
+const navbarItems = ["Home", "About", "Portfolio", "Form", "Contact"];
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const [isMobile, setIsMobile] = useState(false);
@@ -20,12 +20,8 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     { title: "Home", href: "#home", requiresAuth: false },
     { title: "About", href: "#about", requiresAuth: false },
     { title: "Portfolio", href: "#portfolio", requiresAuth: false },
-    { title: "Blog", href: "/blog", requiresAuth: false },
+    { title: "Form", href: "#form", requiresAuth: false },
     { title: "Contact", href: "#contact", requiresAuth: false },
-    { title: "Ticketmatics", href: "/ticketmatics", requiresAuth: false },
-    { title: "Ticketmatics Dashboard", href: "/ticketmatics/dashboard", requiresAuth: true },
-    { title: "Visucord", href: "/visucord", requiresAuth: false },
-    { title: "Visucord Dashboard", href: "/visucord/dashboard", requiresAuth: true },
     { title: "Privacy Policy", href: "/privacy", requiresAuth: false },
     { title: "Terms of Service", href: "/terms", requiresAuth: false },
   ];

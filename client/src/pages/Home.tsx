@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Twitter, Menu, ExternalLink, User, LogOut } from "lucide-react";
+import { Menu, ExternalLink, User, LogOut } from "lucide-react";
 import { SiDiscord, SiRoblox, SiX } from "react-icons/si";
 import { AuthModal } from "@/components/AuthModal";
 import { RippleBackground } from "@/components/RippleBackground";
@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-black font-sans overflow-x-hidden">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 md:px-12 flex justify-between items-center mix-blend-difference">
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 md:px-12 flex justify-between items-center bg-black/30 backdrop-blur-sm">
         <div className="flex items-center gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -145,7 +145,7 @@ export default function Home() {
       <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 opacity-45"
           style={{
             backgroundImage: "url('/image-principal-landpage.png')",
             backgroundSize: "cover",
@@ -233,25 +233,25 @@ export default function Home() {
             title="Ladrões"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
             link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
-            icon={<SiRoblox className="w-6 h-6 text-primary" />}
+            image="/portfolio-ladroes.png"
           />
           <PortfolioCard
             title="Animation Package Catalog"
             description="A comprehensive catalog of animation packages for Roblox, featuring high-quality character animations and movements."
             link="https://www.roblox.com/pt/games/137596460407088/Animation-Package-Catalog"
-            icon={<SiRoblox className="w-6 h-6 text-primary" />}
+            image="/portfolio-animation.png"
           />
           <PortfolioCard
             title="Ticketmatics"
             description="Professional Discord ticket management bot with advanced features for support teams and community management."
             link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
-            icon={<SiDiscord className="w-6 h-6 text-primary" />}
+            image="/portfolio-ticketmatics.png"
           />
           <PortfolioCard
             title="Visucord"
             description="Comprehensive Discord statistics and analytics bot providing deep insights into server activity and member engagement."
             link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
-            icon={<SiDiscord className="w-6 h-6 text-primary" />}
+            image="/portfolio-visucord.png"
           />
         </div>
       </section>
@@ -336,27 +336,33 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
   );
 }
 
-function PortfolioCard({ title, description, link, icon }: { title: string; description: string; link: string; icon: React.ReactNode }) {
+function PortfolioCard({ title, description, link, image }: { title: string; description: string; link: string; image: string }) {
   return (
     <motion.div
       whileHover={{ y: -10 }}
-      className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
+      className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
     >
-      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-        {icon}
+      <div className="aspect-video w-full overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
       </div>
-      <h3 className="text-xl font-bold mb-3">{title}</h3>
-      <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-        {description}
-      </p>
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider group/link"
-      >
-        View Project <ExternalLink className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-      </a>
+      <div className="p-6">
+        <h3 className="text-xl font-bold mb-3">{title}</h3>
+        <p className="text-zinc-500 text-sm leading-relaxed mb-6">
+          {description}
+        </p>
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider group/link"
+        >
+          View Project <ExternalLink className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+        </a>
+      </div>
     </motion.div>
   );
 }

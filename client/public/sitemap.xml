@@ -2,15 +2,56 @@
 <urlset
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+            http://www.google.com/schemas/sitemap-image/1.1
+            http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
 
+<!-- 
+  Sitemap for Darave Studios
+  Generated: 2026-02-11
+  This sitemap helps search engines discover and index all public pages.
+-->
 
+<!-- Homepage - Main landing page -->
 <url>
   <loc>https://daravestudios.vercel.app/</loc>
-  <lastmod>2026-02-11T01:13:47+00:00</lastmod>
+  <lastmod>2026-02-11</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/logo-hero.png</image:loc>
+    <image:title>Darave Studios Logo</image:title>
+  </image:image>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/image-principal-landpage.png</image:loc>
+    <image:title>Darave Studios - Creative Development</image:title>
+  </image:image>
 </url>
 
+<!-- Form Page - Contact/Registration -->
+<url>
+  <loc>https://daravestudios.vercel.app/form</loc>
+  <lastmod>2026-02-11</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<!-- Privacy Policy -->
+<url>
+  <loc>https://daravestudios.vercel.app/privacy</loc>
+  <lastmod>2026-02-11</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
+</url>
+
+<!-- Terms of Service -->
+<url>
+  <loc>https://daravestudios.vercel.app/terms</loc>
+  <lastmod>2026-02-11</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
+</url>
 
 </urlset>

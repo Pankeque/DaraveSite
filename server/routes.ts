@@ -118,9 +118,8 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       console.log("[DEBUG] Parsed data successfully");
       
       // Check if user already exists
-      const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, data.email),
-      });
+      const existingUsers = await db.select().from(users).where(eq(users.email, data.email));
+      const existingUser = existingUsers[0];
       console.log("[DEBUG] Existing user check:", existingUser ? "found" : "not found");
 
       if (existingUser) {
@@ -169,9 +168,8 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       const data = loginSchema.parse(req.body);
       console.log("[DEBUG] Login data parsed successfully");
 
-      const user = await db.query.users.findFirst({
-        where: eq(users.email, data.email),
-      });
+      const userResults = await db.select().from(users).where(eq(users.email, data.email));
+      const user = userResults[0];
       console.log("[DEBUG] User lookup:", user ? "found" : "not found");
 
       if (!user) {
@@ -209,7 +207,7 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
   // Auth - Logout
   app.post("/api/auth/logout", (req: Request, res: Response) => {
     console.log("[DEBUG] Logout attempt");
-    req.session.destroy((err) => {
+    req.session.destroy((err: Error | null) => {
       if (err) {
         console.error("[DEBUG] Logout error:", err);
         return res.status(500).json({ message: "Failed to logout" });
@@ -229,9 +227,8 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     }
 
     try {
-      const user = await db.query.users.findFirst({
-        where: eq(users.id, req.session.userId),
-      });
+      const userResults = await db.select().from(users).where(eq(users.id, req.session.userId));
+      const user = userResults[0];
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
@@ -256,9 +253,8 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       const data = insertNewsletterSchema.parse(req.body);
       
       // Check if email already subscribed
-      const existingSubscription = await db.query.newsletterSubscriptions.findFirst({
-        where: eq(newsletterSubscriptions.email, data.email),
-      });
+      const existingSubscriptions = await db.select().from(newsletterSubscriptions).where(eq(newsletterSubscriptions.email, data.email));
+      const existingSubscription = existingSubscriptions[0];
 
       if (existingSubscription) {
         return res.status(400).json({ message: "This email is already subscribed" });

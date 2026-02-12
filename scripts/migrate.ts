@@ -198,6 +198,31 @@ async function runMigrations() {
     `);
     console.log('0003_session_table completed.');
 
+    // Migration 0004 - Form submissions tables
+    console.log('Running 0004_form_submissions...');
+    await db.execute(sql`
+      -- Create game_submissions table
+      CREATE TABLE IF NOT EXISTS game_submissions (
+        id SERIAL PRIMARY KEY,
+        game_name TEXT NOT NULL,
+        game_link TEXT NOT NULL,
+        daily_active_users TEXT,
+        total_visits TEXT,
+        revenue TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      -- Create asset_submissions table
+      CREATE TABLE IF NOT EXISTS asset_submissions (
+        id SERIAL PRIMARY KEY,
+        assets_count TEXT,
+        asset_links TEXT,
+        additional_notes TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+    console.log('0004_form_submissions completed.');
+
     console.log('All migrations completed successfully!');
     process.exit(0);
   } catch (error) {

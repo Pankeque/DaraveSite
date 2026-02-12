@@ -1,9 +1,49 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader2 } from "lucide-react";
 
 export default function Form() {
   const { toast } = useToast();
+  const { user, isLoading } = useAuth();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!isLoading && !user) {
+      setIsRedirecting(true);
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to access the form page.",
+        variant: "destructive",
+      });
+      // Redirect to home after a short delay
+      const timer = setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [user, isLoading, toast]);
+  
+  // Show loading state while checking auth or redirecting
+  if (isLoading || isRedirecting) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-zinc-400">
+            {isRedirecting ? "Redirecting to home..." : "Loading..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Don't render the form if not authenticated
+  if (!user) {
+    return null;
+  }
   
   // Game form state
   const [gameForm, setGameForm] = useState({
@@ -28,12 +68,17 @@ export default function Form() {
     e.preventDefault();
     setIsGameSubmitting(true);
     
+    console.log("[DEBUG] Game form submission started:", gameForm);
+    
     try {
       const response = await fetch("/api/submissions/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Added for session cookie support
         body: JSON.stringify(gameForm),
       });
+      
+      console.log("[DEBUG] Game form response status:", response.status);
       
       const data = await response.json();
       
@@ -72,12 +117,17 @@ export default function Form() {
     e.preventDefault();
     setIsAssetSubmitting(true);
     
+    console.log("[DEBUG] Asset form submission started:", assetForm);
+    
     try {
       const response = await fetch("/api/submissions/asset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Added for session cookie support
         body: JSON.stringify(assetForm),
       });
+      
+      console.log("[DEBUG] Asset form response status:", response.status);
       
       const data = await response.json();
       

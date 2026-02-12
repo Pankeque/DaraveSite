@@ -138,9 +138,22 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
         .returning();
       console.log("[DEBUG] User created:", { id: user.id, email: user.email });
 
-      // Set session
+      // Set session and ensure it's saved before responding
       req.session.userId = user.id;
-      console.log("[DEBUG] Session set:", { userId: req.session.userId });
+      console.log("[DEBUG] Session set:", { userId: req.session.userId, sessionID: req.sessionID });
+      
+      // Save session explicitly before sending response
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) {
+            console.error("[DEBUG] Session save error:", err);
+            reject(err);
+          } else {
+            console.log("[DEBUG] Session saved successfully");
+            resolve();
+          }
+        });
+      });
 
       res.status(201).json({
         user: {
@@ -181,9 +194,22 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // Set session
+      // Set session and ensure it's saved before responding
       req.session.userId = user.id;
-      console.log("[DEBUG] Session userId set:", req.session.userId);
+      console.log("[DEBUG] Session userId set:", req.session.userId, "sessionID:", req.sessionID);
+      
+      // Save session explicitly before sending response
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) {
+            console.error("[DEBUG] Session save error:", err);
+            reject(err);
+          } else {
+            console.log("[DEBUG] Session saved successfully");
+            resolve();
+          }
+        });
+      });
 
       res.status(200).json({
         user: {

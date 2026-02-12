@@ -17,12 +17,6 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 export const insertRegistrationSchema = createInsertSchema(registrations).pick({
   email: true,
   interest: true,
@@ -50,19 +44,11 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export const insertNewsletterSchema = createInsertSchema(newsletterSubscriptions).pick({
-  email: true,
-}).extend({
-  email: z.string().email("Please enter a valid email address"),
-});
-
 export type InsertRegistration = z.infer<typeof insertRegistrationSchema>;
 export type Registration = typeof registrations.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type LoginInput = z.infer<typeof loginSchema>;
-export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
-export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
 
 // Game Form Schema
 export const gameSubmissions = pgTable("game_submissions", {

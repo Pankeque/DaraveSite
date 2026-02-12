@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { 
   insertRegistrationSchema, registrations, 
-  insertUserSchema, loginSchema, users, 
-  insertNewsletterSchema, newsletterSubscriptions 
+  insertUserSchema, loginSchema, users 
 } from './schema';
 
 export const errorSchemas = {
@@ -77,17 +76,6 @@ export const api = {
           }),
         }),
         401: errorSchemas.validation,
-      },
-    },
-  },
-  newsletter: {
-    subscribe: {
-      method: 'POST' as const,
-      path: '/api/newsletter/subscribe' as const,
-      input: insertNewsletterSchema,
-      responses: {
-        201: z.object({ message: z.string() }),
-        400: errorSchemas.validation,
       },
     },
   },

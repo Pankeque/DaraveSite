@@ -7,8 +7,6 @@ import {
   insertRegistrationSchema,
   insertUserSchema,
   loginSchema,
-  newsletterSubscriptions,
-  insertNewsletterSchema,
   gameSubmissions,
   assetSubmissions,
   insertGameSubmissionSchema,
@@ -244,30 +242,6 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     } catch (error) {
       console.error("[DEBUG] Auth me error:", error);
       res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  // Newsletter - Subscribe
-  app.post("/api/newsletter/subscribe", async (req: Request, res: Response) => {
-    try {
-      const data = insertNewsletterSchema.parse(req.body);
-      
-      // Check if email already subscribed
-      const existingSubscriptions = await db.select().from(newsletterSubscriptions).where(eq(newsletterSubscriptions.email, data.email));
-      const existingSubscription = existingSubscriptions[0];
-
-      if (existingSubscription) {
-        return res.status(400).json({ message: "This email is already subscribed" });
-      }
-
-      await db.insert(newsletterSubscriptions).values(data);
-      res.status(201).json({ message: "Successfully subscribed to newsletter" });
-    } catch (error: any) {
-      if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
-      } else {
-        res.status(500).json({ message: "Internal server error" });
-      }
     }
   });
 

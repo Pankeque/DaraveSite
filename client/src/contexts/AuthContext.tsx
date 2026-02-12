@@ -93,6 +93,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (email: string, password: string) => {
+    console.log("[DEBUG] Login attempt for:", email);
+    
     const res = await fetch(api.auth.login.path, {
       method: api.auth.login.method,
       headers: { "Content-Type": "application/json" },
@@ -100,8 +102,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({ email, password }),
     });
 
+    console.log("[DEBUG] Login response status:", res.status);
+
     if (!res.ok) {
       const { data, error } = await safeParseJSON(res);
+      console.log("[DEBUG] Login error response:", { data, error });
       if (error) {
         throw new Error("A server error occurred. Please try again later.");
       }
@@ -109,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const { data, error } = await safeParseJSON(res);
+    console.log("[DEBUG] Login success response:", { data, error });
     if (error || !data) {
       throw new Error("Failed to process server response");
     }
@@ -116,6 +122,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (email: string, password: string, name: string) => {
+    console.log("[DEBUG] Register attempt for:", email, name);
+    
     const res = await fetch(api.auth.register.path, {
       method: api.auth.register.method,
       headers: { "Content-Type": "application/json" },
@@ -123,8 +131,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({ email, password, name }),
     });
 
+    console.log("[DEBUG] Register response status:", res.status);
+
     if (!res.ok) {
       const { data, error } = await safeParseJSON(res);
+      console.log("[DEBUG] Register error response:", { data, error });
       if (error) {
         throw new Error("A server error occurred. Please try again later.");
       }
@@ -132,6 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const { data, error } = await safeParseJSON(res);
+    console.log("[DEBUG] Register success response:", { data, error });
     if (error || !data) {
       throw new Error("Failed to process server response");
     }

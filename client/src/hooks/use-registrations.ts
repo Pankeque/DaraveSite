@@ -8,21 +8,31 @@ export function useCreateRegistration() {
   
   return useMutation({
     mutationFn: async (data: InsertRegistration) => {
+      console.log("[DEBUG] Registration request data:", data);
+      
       const res = await fetch(api.registrations.create.path, {
         method: api.registrations.create.method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       
-      if (!res.ok) {
-        if (res.status === 400) {
-          const error = api.registrations.create.responses[400].parse(await res.json());
-          throw new Error(error.message);
-        }
-        throw new Error("Failed to register");
+      console.log("[DEBUG] Registration response status:", res.status);
+      
+      // Try to parse JSON response
+      let responseData;
+      try {
+        responseData = await res.json();
+        console.log("[DEBUG] Registration response data:", responseData);
+      } catch (e) {
+        console.error("[DEBUG] Failed to parse response as JSON:", e);
+        throw new Error("Server returned invalid response");
       }
       
-      return api.registrations.create.responses[201].parse(await res.json());
+      if (!res.ok) {
+        throw new Error(responseData.message || "Failed to register");
+      }
+      
+      return responseData;
     },
     onSuccess: () => {
       toast({
@@ -31,7 +41,8 @@ export function useCreateRegistration() {
         className: "bg-primary text-primary-foreground border-none",
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
+      console.error("[DEBUG] Registration error:", error);
       toast({
         title: "Registration Failed",
         description: error.message,

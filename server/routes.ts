@@ -247,18 +247,21 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
 
   // Game Submission endpoint
   app.post("/api/submissions/game", async (req: Request, res: Response) => {
+    console.log("[DEBUG] Game submission request body:", req.body);
     try {
       const data = insertGameSubmissionSchema.parse(req.body);
+      console.log("[DEBUG] Parsed game data:", data);
       const [submission] = await db.insert(gameSubmissions).values(data).returning();
+      console.log("[DEBUG] Game submission saved:", submission);
       res.status(201).json({ 
         message: "Game submission saved successfully", 
         submission 
       });
     } catch (error: any) {
+      console.error("[ERROR] Game submission error:", error);
       if (error.name === "ZodError") {
         res.status(400).json({ message: error.errors[0].message });
       } else {
-        console.error("[ERROR] Game submission error:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     }
@@ -266,18 +269,21 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
 
   // Asset Submission endpoint
   app.post("/api/submissions/asset", async (req: Request, res: Response) => {
+    console.log("[DEBUG] Asset submission request body:", req.body);
     try {
       const data = insertAssetSubmissionSchema.parse(req.body);
+      console.log("[DEBUG] Parsed asset data:", data);
       const [submission] = await db.insert(assetSubmissions).values(data).returning();
+      console.log("[DEBUG] Asset submission saved:", submission);
       res.status(201).json({ 
         message: "Asset submission saved successfully", 
         submission 
       });
     } catch (error: any) {
+      console.error("[ERROR] Asset submission error:", error);
       if (error.name === "ZodError") {
         res.status(400).json({ message: error.errors[0].message });
       } else {
-        console.error("[ERROR] Asset submission error:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     }

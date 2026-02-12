@@ -233,7 +233,7 @@ export default function Home() {
             title="Robbers"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
             link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
-            image="/portfolio-ladroes.png"
+            image="/portfolio-robbers.png"
           />
           <PortfolioCard
             title="Animation Package Catalog"

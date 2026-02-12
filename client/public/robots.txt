@@ -1,0 +1,28 @@
+# Robots.txt for Darave Studios
+# https://daravestudios.vercel.app
+
+# Allow all search engines
+User-agent: *
+
+# Allow all pages to be indexed
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /auth/
+
+# Sitemap location
+Sitemap: https://daravestudios.vercel.app/sitemap.xml
+
+# Crawl delay (optional, for server performance)
+Crawl-delay: 1
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

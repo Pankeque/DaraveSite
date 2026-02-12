@@ -3,6 +3,7 @@
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+      xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
             http://www.google.com/schemas/sitemap-image/1.1
@@ -10,30 +11,33 @@
 
 <!-- 
   Sitemap for Darave Studios
-  Generated: 2026-02-11
+  Generated: 2026-02-12
   This sitemap helps search engines discover and index all public pages.
+  Last updated: SEO optimization
 -->
 
 <!-- Homepage - Main landing page -->
 <url>
   <loc>https://daravestudios.vercel.app/</loc>
-  <lastmod>2026-02-11</lastmod>
+  <lastmod>2026-02-12</lastmod>
   <changefreq>weekly</changefreq>
   <priority>1.0</priority>
   <image:image>
     <image:loc>https://daravestudios.vercel.app/logo-hero.png</image:loc>
     <image:title>Darave Studios Logo</image:title>
+    <image:caption>Darave Studios - Game Development Studio</image:caption>
   </image:image>
   <image:image>
     <image:loc>https://daravestudios.vercel.app/image-principal-landpage.png</image:loc>
     <image:title>Darave Studios - Creative Development</image:title>
+    <image:caption>Creating immersive gaming experiences</image:caption>
   </image:image>
 </url>
 
 <!-- Form Page - Contact/Registration -->
 <url>
   <loc>https://daravestudios.vercel.app/form</loc>
-  <lastmod>2026-02-11</lastmod>
+  <lastmod>2026-02-12</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.8</priority>
 </url>
@@ -41,7 +45,7 @@
 <!-- Privacy Policy -->
 <url>
   <loc>https://daravestudios.vercel.app/privacy</loc>
-  <lastmod>2026-02-11</lastmod>
+  <lastmod>2026-02-12</lastmod>
   <changefreq>yearly</changefreq>
   <priority>0.3</priority>
 </url>
@@ -49,9 +53,61 @@
 <!-- Terms of Service -->
 <url>
   <loc>https://daravestudios.vercel.app/terms</loc>
-  <lastmod>2026-02-11</lastmod>
+  <lastmod>2026-02-12</lastmod>
   <changefreq>yearly</changefreq>
   <priority>0.3</priority>
+</url>
+
+<!-- Portfolio - Visucord Project -->
+<url>
+  <loc>https://daravestudios.vercel.app/</loc>
+  <lastmod>2026-02-12</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/portfolio-visucord.png</image:loc>
+    <image:title>Visucord - Discord Bot Dashboard</image:title>
+    <image:caption>Advanced Discord bot management tool</image:caption>
+  </image:image>
+</url>
+
+<!-- Portfolio - Ticketmatics Project -->
+<url>
+  <loc>https://daravestudios.vercel.app/</loc>
+  <lastmod>2026-02-12</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/portfolio-ticketmatics.png</image:loc>
+    <image:title>Ticketmatics - Ticket Management System</image:title>
+    <image:caption>Professional ticket management solution</image:caption>
+  </image:image>
+</url>
+
+<!-- Portfolio - Animation Project -->
+<url>
+  <loc>https://daravestudios.vercel.app/</loc>
+  <lastmod>2026-02-12</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/portfolio-animation.png</image:loc>
+    <image:title>Animation Tools - Roblox Animation System</image:title>
+    <image:caption>Custom animation tools for Roblox</image:caption>
+  </image:image>
+</url>
+
+<!-- Portfolio - Ladroes Project -->
+<url>
+  <loc>https://daravestudios.vercel.app/</loc>
+  <lastmod>2026-02-12</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <image:image>
+    <image:loc>https://daravestudios.vercel.app/portfolio-ladroes.png</image:loc>
+    <image:title>Ladroes - Roblox Game</image:title>
+    <image:caption>Immersive Roblox gaming experience</image:caption>
+  </image:image>
 </url>
 
 </urlset>

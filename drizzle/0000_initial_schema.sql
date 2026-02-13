@@ -1,3 +1,7 @@
+-- Migration 0000: Initial schema
+-- Core tables for user authentication and email registrations
+-- This is the base migration with no dependencies
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS "users" (
   "id" SERIAL PRIMARY KEY,

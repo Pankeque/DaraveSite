@@ -1,11 +1,13 @@
 import { db } from '../server/db';
 import { sql } from 'drizzle-orm';
+import fs from 'fs';
+import path from 'path';
 
 async function runMigrations() {
   console.log('Running migrations...');
   
   try {
-    // Migration 0000 - Initial schema
+    // Migration 0000 - Initial schema (users and registrations)
     console.log('Running 0000_initial_schema...');
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS registrations (
@@ -23,23 +25,20 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW()
       );
       
-      -- Create indexes for initial tables
       CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
       CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations (email);
     `);
     console.log('0000_initial_schema completed.');
 
-    // Migration 0003 - Session table for authentication
-    console.log('Running 0003_session_table...');
+    // Migration 0001 - Session table for authentication
+    console.log('Running 0001_session_table...');
     await db.execute(sql`
-      -- Create session table for connect-pg-simple
       CREATE TABLE IF NOT EXISTS session (
         sid VARCHAR NOT NULL COLLATE "default",
         sess JSON NOT NULL,
         expire TIMESTAMP(6) NOT NULL
       );
       
-      -- Add primary key constraint if not exists
       DO $$
       BEGIN
         IF NOT EXISTS (
@@ -49,15 +48,13 @@ async function runMigrations() {
         END IF;
       END $$;
       
-      -- Create index for session expiration
       CREATE INDEX IF NOT EXISTS IDX_session_expire ON session(expire);
     `);
-    console.log('0003_session_table completed.');
+    console.log('0001_session_table completed.');
 
-    // Migration 0004 - Form submissions tables
-    console.log('Running 0004_form_submissions...');
+    // Migration 0002 - Form submissions tables
+    console.log('Running 0002_form_submissions...');
     await db.execute(sql`
-      -- Create game_submissions table
       CREATE TABLE IF NOT EXISTS game_submissions (
         id SERIAL PRIMARY KEY,
         game_name TEXT NOT NULL,
@@ -68,7 +65,6 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW()
       );
 
-      -- Create asset_submissions table
       CREATE TABLE IF NOT EXISTS asset_submissions (
         id SERIAL PRIMARY KEY,
         assets_count TEXT,
@@ -77,7 +73,7 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
-    console.log('0004_form_submissions completed.');
+    console.log('0002_form_submissions completed.');
 
     console.log('All migrations completed successfully!');
     process.exit(0);

@@ -1,5 +1,6 @@
--- Session table for connect-pg-simple (PostgreSQL session store)
+-- Migration 0001: Session table for connect-pg-simple (PostgreSQL session store)
 -- This table is required for persistent sessions in production
+-- Depends on: 0000_initial_schema
 
 -- Create session table
 CREATE TABLE IF NOT EXISTS session (

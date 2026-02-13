@@ -101,9 +101,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       res.status(201).json(registration);
     } catch (error: any) {
       if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
+        res.status(400).json({ 
+          message: error.errors[0].message,
+          errorType: "ZodError",
+          validationErrors: error.errors,
+          stack: error.stack
+        });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ 
+          message: "Internal server error",
+          errorType: error.name || "UnknownError",
+          errorMessage: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       }
     }
   });
@@ -165,9 +176,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     } catch (error: any) {
       console.error("[DEBUG] Register error:", error);
       if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
+        res.status(400).json({ 
+          message: error.errors[0].message,
+          errorType: "ZodError",
+          validationErrors: error.errors,
+          stack: error.stack
+        });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ 
+          message: "Internal server error",
+          errorType: error.name || "UnknownError",
+          errorMessage: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       }
     }
   });
@@ -221,9 +243,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     } catch (error: any) {
       console.error("[DEBUG] Login error:", error);
       if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
+        res.status(400).json({ 
+          message: error.errors[0].message,
+          errorType: "ZodError",
+          validationErrors: error.errors,
+          stack: error.stack
+        });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ 
+          message: "Internal server error",
+          errorType: error.name || "UnknownError",
+          errorMessage: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       }
     }
   });
@@ -265,9 +298,15 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
           name: user.name,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("[DEBUG] Auth me error:", error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ 
+        message: "Internal server error",
+        errorType: error.name || "UnknownError",
+        errorMessage: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
     }
   });
 
@@ -299,9 +338,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     } catch (error: any) {
       console.error("[ERROR] Game submission error:", error);
       if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
+        res.status(400).json({ 
+          message: error.errors[0].message,
+          errorType: "ZodError",
+          validationErrors: error.errors,
+          stack: error.stack
+        });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ 
+          message: "Internal server error",
+          errorType: error.name || "UnknownError",
+          errorMessage: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       }
     }
   });
@@ -334,9 +384,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     } catch (error: any) {
       console.error("[ERROR] Asset submission error:", error);
       if (error.name === "ZodError") {
-        res.status(400).json({ message: error.errors[0].message });
+        res.status(400).json({ 
+          message: error.errors[0].message,
+          errorType: "ZodError",
+          validationErrors: error.errors,
+          stack: error.stack
+        });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ 
+          message: "Internal server error",
+          errorType: error.name || "UnknownError",
+          errorMessage: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       }
     }
   });

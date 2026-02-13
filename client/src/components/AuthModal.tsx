@@ -44,10 +44,21 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       setPassword("");
       setName("");
     } catch (error: any) {
-      // The error message is already sanitized by AuthContext
+      // Display detailed technical error information for debugging
+      const errorTitle = isLogin ? "LOGIN FAILED - Technical Details" : "REGISTRATION FAILED - Technical Details";
+      const errorDescription = error.message || "Unknown error - no message available";
+      
+      console.error("[AUTH ERROR]", {
+        title: errorTitle,
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        fullError: error
+      });
+      
       toast({
-        title: isLogin ? "Login failed" : "Registration failed",
-        description: error.message || "An unexpected error occurred. Please try again.",
+        title: errorTitle,
+        description: errorDescription,
         variant: "destructive",
       });
     } finally {

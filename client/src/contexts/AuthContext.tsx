@@ -42,28 +42,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Helper function to sanitize error messages
-  const sanitizeErrorMessage = (message: string): string => {
-    // Check if message contains code-related content or HTML
-    if (message.includes('<!DOCTYPE') || 
-        message.includes('<html') ||
-        message.includes('<body') ||
-        message.includes('SyntaxError') || 
-        message.includes('ReferenceError') ||
-        message.includes('TypeError') ||
-        message.includes('at ') ||
-        message.includes('.ts:') ||
-        message.includes('.js:') ||
-        message.includes('stack') ||
-        message.includes('Error:') ||
-        message.includes('function') ||
-        message.includes('undefined') ||
-        message.includes('Cannot read') ||
-        message.includes('not valid JSON') ||
-        message.includes('Unexpected token')) {
-      return "A server error occurred. Please try again later.";
+  // Helper function to format detailed error messages for debugging
+  const formatDetailedError = (error: any, statusCode: number, url: string): string => {
+    const details: string[] = [];
+    
+    details.push(`Status: ${statusCode}`);
+    details.push(`URL: ${url}`);
+    
+    if (error?.message) {
+      details.push(`Error: ${error.message}`);
     }
-    return message;
+    
+    if (error?.stack) {
+      details.push(`Stack: ${error.stack}`);
+    }
+    
+    if (error?.name) {
+      details.push(`Type: ${error.name}`);
+    }
+    
+    // Include any additional error properties
+    if (error && typeof error === 'object') {
+      Object.keys(error).forEach(key => {
+        if (!['message', 'stack', 'name'].includes(key)) {
+          try {
+            const value = typeof error[key] === 'object' 
+              ? JSON.stringify(error[key], null, 2) 
+              : String(error[key]);
+            details.push(`${key}: ${value}`);
+          } catch {
+            details.push(`${key}: [Unable to serialize]`);
+          }
+        }
+      });
+    }
+    
+    return details.join(' | ');
   };
 
   // Helper function to safely parse JSON response
@@ -107,16 +121,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!res.ok) {
       const { data, error } = await safeParseJSON(res);
       console.log("[DEBUG] Login error response:", { data, error });
-      if (error) {
-        throw new Error("A server error occurred. Please try again later.");
-      }
-      throw new Error(sanitizeErrorMessage(data?.message || "Login failed"));
+      
+      // Build detailed error message for debugging
+      const errorDetails = formatDetailedError(
+        { 
+          ...data, 
+          parseError: error,
+          responseBody: data 
+        }, 
+        res.status, 
+        api.auth.login.path
+      );
+      
+      throw new Error(`LOGIN FAILED: ${errorDetails}`);
     }
 
     const { data, error } = await safeParseJSON(res);
     console.log("[DEBUG] Login success response:", { data, error });
     if (error || !data) {
-      throw new Error("Failed to process server response");
+      throw new Error(`LOGIN FAILED: Failed to process server response | Status: ${res.status} | Parse Error: ${error}`);
     }
     setUser(data.user);
   };
@@ -136,16 +159,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!res.ok) {
       const { data, error } = await safeParseJSON(res);
       console.log("[DEBUG] Register error response:", { data, error });
-      if (error) {
-        throw new Error("A server error occurred. Please try again later.");
-      }
-      throw new Error(sanitizeErrorMessage(data?.message || "Registration failed"));
+      
+      // Build detailed error message for debugging
+      const errorDetails = formatDetailedError(
+        { 
+          ...data, 
+          parseError: error,
+          responseBody: data 
+        }, 
+        res.status, 
+        api.auth.register.path
+      );
+      
+      throw new Error(`REGISTRATION FAILED: ${errorDetails}`);
     }
 
     const { data, error } = await safeParseJSON(res);
     console.log("[DEBUG] Register success response:", { data, error });
     if (error || !data) {
-      throw new Error("Failed to process server response");
+      throw new Error(`REGISTRATION FAILED: Failed to process server response | Status: ${res.status} | Parse Error: ${error}`);
     }
     setUser(data.user);
   };

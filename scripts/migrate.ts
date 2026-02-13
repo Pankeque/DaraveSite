@@ -75,6 +75,129 @@ async function runMigrations() {
     `);
     console.log('0002_form_submissions completed.');
 
+    // Migration 0003 - Row Level Security (RLS)
+    console.log('Running 0003_enable_rls...');
+    await db.execute(sql`
+      -- Add user_id columns to submissions tables
+      ALTER TABLE game_submissions 
+      ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+      
+      ALTER TABLE asset_submissions 
+      ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+      
+      -- Add supabase_user_id to users table for Supabase Auth integration
+      ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS supabase_user_id UUID UNIQUE;
+      
+      -- Create indexes for performance
+      CREATE INDEX IF NOT EXISTS idx_game_submissions_user_id ON game_submissions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_asset_submissions_user_id ON asset_submissions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_users_supabase_user_id ON users(supabase_user_id);
+      
+      -- Enable RLS on all tables
+      ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE registrations ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE game_submissions ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE asset_submissions ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE session ENABLE ROW LEVEL SECURITY;
+      
+      -- Create helper function for admin check
+      CREATE OR REPLACE FUNCTION is_admin()
+      RETURNS BOOLEAN AS $$
+      BEGIN
+        RETURN COALESCE(
+          auth.jwt() -> 'user_metadata' ->> 'role' = 'admin',
+          false
+        );
+      END;
+      $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
+      
+      -- Create helper function to get current user's database id
+      CREATE OR REPLACE FUNCTION current_user_id()
+      RETURNS INTEGER AS $$
+      BEGIN
+        RETURN (
+          SELECT id FROM users 
+          WHERE supabase_user_id = auth.uid() 
+          LIMIT 1
+        );
+      END;
+      $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
+      
+      -- Users policies
+      DROP POLICY IF EXISTS "users_select_own" ON users;
+      CREATE POLICY "users_select_own" ON users FOR SELECT USING (supabase_user_id = auth.uid());
+      
+      DROP POLICY IF EXISTS "users_admin_select" ON users;
+      CREATE POLICY "users_admin_select" ON users FOR SELECT USING (is_admin());
+      
+      DROP POLICY IF EXISTS "users_update_own" ON users;
+      CREATE POLICY "users_update_own" ON users FOR UPDATE USING (supabase_user_id = auth.uid()) WITH CHECK (supabase_user_id = auth.uid());
+      
+      DROP POLICY IF EXISTS "users_admin_update" ON users;
+      CREATE POLICY "users_admin_update" ON users FOR UPDATE USING (is_admin());
+      
+      DROP POLICY IF EXISTS "users_insert_registration" ON users;
+      CREATE POLICY "users_insert_registration" ON users FOR INSERT WITH CHECK (true);
+      
+      DROP POLICY IF EXISTS "users_admin_delete" ON users;
+      CREATE POLICY "users_admin_delete" ON users FOR DELETE USING (is_admin());
+      
+      -- Registrations policies
+      DROP POLICY IF EXISTS "registrations_insert_public" ON registrations;
+      CREATE POLICY "registrations_insert_public" ON registrations FOR INSERT WITH CHECK (true);
+      
+      DROP POLICY IF EXISTS "registrations_select_own" ON registrations;
+      CREATE POLICY "registrations_select_own" ON registrations FOR SELECT USING (email = (SELECT email FROM users WHERE supabase_user_id = auth.uid()));
+      
+      DROP POLICY IF EXISTS "registrations_admin_all" ON registrations;
+      CREATE POLICY "registrations_admin_all" ON registrations FOR ALL USING (is_admin());
+      
+      -- Game submissions policies
+      DROP POLICY IF EXISTS "game_submissions_insert_own" ON game_submissions;
+      CREATE POLICY "game_submissions_insert_own" ON game_submissions FOR INSERT WITH CHECK (user_id = current_user_id() OR user_id IS NULL);
+      
+      DROP POLICY IF EXISTS "game_submissions_select_own" ON game_submissions;
+      CREATE POLICY "game_submissions_select_own" ON game_submissions FOR SELECT USING (user_id = current_user_id());
+      
+      DROP POLICY IF EXISTS "game_submissions_admin_all" ON game_submissions;
+      CREATE POLICY "game_submissions_admin_all" ON game_submissions FOR ALL USING (is_admin());
+      
+      DROP POLICY IF EXISTS "game_submissions_update_own" ON game_submissions;
+      CREATE POLICY "game_submissions_update_own" ON game_submissions FOR UPDATE USING (user_id = current_user_id()) WITH CHECK (user_id = current_user_id());
+      
+      DROP POLICY IF EXISTS "game_submissions_delete_own" ON game_submissions;
+      CREATE POLICY "game_submissions_delete_own" ON game_submissions FOR DELETE USING (user_id = current_user_id());
+      
+      -- Asset submissions policies
+      DROP POLICY IF EXISTS "asset_submissions_insert_own" ON asset_submissions;
+      CREATE POLICY "asset_submissions_insert_own" ON asset_submissions FOR INSERT WITH CHECK (user_id = current_user_id() OR user_id IS NULL);
+      
+      DROP POLICY IF EXISTS "asset_submissions_select_own" ON asset_submissions;
+      CREATE POLICY "asset_submissions_select_own" ON asset_submissions FOR SELECT USING (user_id = current_user_id());
+      
+      DROP POLICY IF EXISTS "asset_submissions_admin_all" ON asset_submissions;
+      CREATE POLICY "asset_submissions_admin_all" ON asset_submissions FOR ALL USING (is_admin());
+      
+      DROP POLICY IF EXISTS "asset_submissions_update_own" ON asset_submissions;
+      CREATE POLICY "asset_submissions_update_own" ON asset_submissions FOR UPDATE USING (user_id = current_user_id()) WITH CHECK (user_id = current_user_id());
+      
+      DROP POLICY IF EXISTS "asset_submissions_delete_own" ON asset_submissions;
+      CREATE POLICY "asset_submissions_delete_own" ON asset_submissions FOR DELETE USING (user_id = current_user_id());
+      
+      -- Session policies
+      DROP POLICY IF EXISTS "session_all" ON session;
+      CREATE POLICY "session_all" ON session FOR ALL USING (true);
+      
+      -- Analyze tables
+      ANALYZE users;
+      ANALYZE registrations;
+      ANALYZE game_submissions;
+      ANALYZE asset_submissions;
+      ANALYZE session;
+    `);
+    console.log('0003_enable_rls completed.');
+
     console.log('All migrations completed successfully!');
     process.exit(0);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   name: text("name").notNull(),
+  supabaseUserId: text("supabase_user_id").unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -58,6 +59,7 @@ export const gameSubmissions = pgTable("game_submissions", {
   dailyActiveUsers: text("daily_active_users"),
   totalVisits: text("total_visits"),
   revenue: text("revenue"),
+  userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -67,6 +69,7 @@ export const assetSubmissions = pgTable("asset_submissions", {
   assetsCount: text("assets_count"),
   assetLinks: text("asset_links"),
   additionalNotes: text("additional_notes"),
+  userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

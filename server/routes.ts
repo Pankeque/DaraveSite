@@ -271,13 +271,26 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     }
   });
 
-  // Game Submission endpoint
+  // Game Submission endpoint - requires authentication
   app.post("/api/submissions/game", async (req: Request, res: Response) => {
     console.log("[DEBUG] Game submission request body:", req.body);
+    console.log("[DEBUG] Session userId:", req.session.userId);
+    
+    // Check authentication
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
       const data = insertGameSubmissionSchema.parse(req.body);
       console.log("[DEBUG] Parsed game data:", data);
-      const [submission] = await db.insert(gameSubmissions).values(data).returning();
+      
+      // Include user_id from session
+      const [submission] = await db.insert(gameSubmissions).values({
+        ...data,
+        userId: req.session.userId,
+      }).returning();
+      
       console.log("[DEBUG] Game submission saved:", submission);
       res.status(201).json({ 
         message: "Game submission saved successfully", 
@@ -293,13 +306,26 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     }
   });
 
-  // Asset Submission endpoint
+  // Asset Submission endpoint - requires authentication
   app.post("/api/submissions/asset", async (req: Request, res: Response) => {
     console.log("[DEBUG] Asset submission request body:", req.body);
+    console.log("[DEBUG] Session userId:", req.session.userId);
+    
+    // Check authentication
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
       const data = insertAssetSubmissionSchema.parse(req.body);
       console.log("[DEBUG] Parsed asset data:", data);
-      const [submission] = await db.insert(assetSubmissions).values(data).returning();
+      
+      // Include user_id from session
+      const [submission] = await db.insert(assetSubmissions).values({
+        ...data,
+        userId: req.session.userId,
+      }).returning();
+      
       console.log("[DEBUG] Asset submission saved:", submission);
       res.status(201).json({ 
         message: "Asset submission saved successfully", 

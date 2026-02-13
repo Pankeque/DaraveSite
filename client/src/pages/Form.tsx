@@ -9,6 +9,25 @@ export default function Form() {
   const { user, isLoading } = useAuth();
   const [isRedirecting, setIsRedirecting] = useState(false);
   
+  // Game form state - MUST be declared before any early returns (React Hooks rules)
+  const [gameForm, setGameForm] = useState({
+    gameName: "",
+    gameLink: "",
+    dailyActiveUsers: "",
+    totalVisits: "",
+    revenue: "",
+  });
+  
+  // Asset form state
+  const [assetForm, setAssetForm] = useState({
+    assetsCount: "",
+    assetLinks: "",
+    additionalNotes: "",
+  });
+  
+  const [isGameSubmitting, setIsGameSubmitting] = useState(false);
+  const [isAssetSubmitting, setIsAssetSubmitting] = useState(false);
+  
   // Redirect to home if not authenticated
   useEffect(() => {
     if (!isLoading && !user) {
@@ -44,25 +63,32 @@ export default function Form() {
   if (!user) {
     return null;
   }
-  
-  // Game form state
-  const [gameForm, setGameForm] = useState({
-    gameName: "",
-    gameLink: "",
-    dailyActiveUsers: "",
-    totalVisits: "",
-    revenue: "",
-  });
-  
-  // Asset form state
-  const [assetForm, setAssetForm] = useState({
-    assetsCount: "",
-    assetLinks: "",
-    additionalNotes: "",
-  });
-  
-  const [isGameSubmitting, setIsGameSubmitting] = useState(false);
-  const [isAssetSubmitting, setIsAssetSubmitting] = useState(false);
+
+  // Helper function to safely parse JSON response
+  const safeParseJSON = async (res: Response): Promise<{ data: any; error: string | null }> => {
+    try {
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const text = await res.text();
+        if (!text || text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+          return { data: null, error: "Server returned HTML instead of JSON" };
+        }
+        try {
+          return { data: JSON.parse(text), error: null };
+        } catch {
+          return { data: null, error: "Invalid JSON response" };
+        }
+      } else {
+        const text = await res.text();
+        if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+          return { data: null, error: "Server returned HTML instead of JSON" };
+        }
+        return { data: { message: text }, error: null };
+      }
+    } catch (e) {
+      return { data: null, error: "Failed to read response" };
+    }
+  };
 
   const handleGameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,13 +100,22 @@ export default function Form() {
       const response = await fetch("/api/submissions/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // Added for session cookie support
+        credentials: "include",
         body: JSON.stringify(gameForm),
       });
       
       console.log("[DEBUG] Game form response status:", response.status);
       
-      const data = await response.json();
+      const { data, error } = await safeParseJSON(response);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: "A server error occurred. Please try again later.",
+          variant: "destructive",
+        });
+        return;
+      }
       
       if (response.ok) {
         toast({
@@ -98,11 +133,12 @@ export default function Form() {
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to submit game metrics.",
+          description: data?.message || "Failed to submit game metrics.",
           variant: "destructive",
         });
       }
     } catch (error) {
+      console.error("[ERROR] Game submission error:", error);
       toast({
         title: "Error",
         description: "An error occurred. Please try again.",
@@ -123,13 +159,22 @@ export default function Form() {
       const response = await fetch("/api/submissions/asset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // Added for session cookie support
+        credentials: "include",
         body: JSON.stringify(assetForm),
       });
       
       console.log("[DEBUG] Asset form response status:", response.status);
       
-      const data = await response.json();
+      const { data, error } = await safeParseJSON(response);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: "A server error occurred. Please try again later.",
+          variant: "destructive",
+        });
+        return;
+      }
       
       if (response.ok) {
         toast({
@@ -145,11 +190,12 @@ export default function Form() {
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to submit asset information.",
+          description: data?.message || "Failed to submit asset information.",
           variant: "destructive",
         });
       }
     } catch (error) {
+      console.error("[ERROR] Asset submission error:", error);
       toast({
         title: "Error",
         description: "An error occurred. Please try again.",

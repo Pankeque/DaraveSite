@@ -198,6 +198,60 @@ async function runMigrations() {
     `);
     console.log('0003_enable_rls completed.');
 
+    // Migration 0004 - Fix RLS for Express session authentication
+    console.log('Running 0004_fix_rls_for_express...');
+    await db.execute(sql`
+      -- Disable RLS on session table (required for connect-pg-simple)
+      ALTER TABLE session DISABLE ROW LEVEL SECURITY;
+      
+      -- Drop existing restrictive policies
+      DROP POLICY IF EXISTS "users_select_own" ON users;
+      DROP POLICY IF EXISTS "users_admin_select" ON users;
+      DROP POLICY IF EXISTS "users_update_own" ON users;
+      DROP POLICY IF EXISTS "users_admin_update" ON users;
+      DROP POLICY IF EXISTS "users_insert_registration" ON users;
+      DROP POLICY IF EXISTS "users_admin_delete" ON users;
+      
+      DROP POLICY IF EXISTS "registrations_insert_public" ON registrations;
+      DROP POLICY IF EXISTS "registrations_select_own" ON registrations;
+      DROP POLICY IF EXISTS "registrations_admin_all" ON registrations;
+      
+      DROP POLICY IF EXISTS "game_submissions_insert_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_select_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_admin_all" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_update_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_delete_own" ON game_submissions;
+      
+      DROP POLICY IF EXISTS "asset_submissions_insert_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_select_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_admin_all" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_update_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_delete_own" ON asset_submissions;
+      
+      -- Create permissive policies for server-side operations
+      -- The Express server handles authentication via sessions
+      CREATE POLICY "users_all_authenticated" ON users FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "registrations_all" ON registrations FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "game_submissions_all" ON game_submissions FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "asset_submissions_all" ON asset_submissions FOR ALL USING (true) WITH CHECK (true);
+      
+      -- Grant permissions
+      GRANT ALL ON ALL TABLES IN SCHEMA public TO authenticated;
+      GRANT ALL ON ALL TABLES IN SCHEMA public TO anon;
+      GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres;
+      GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+      GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon;
+      GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres;
+      
+      -- Analyze tables
+      ANALYZE users;
+      ANALYZE registrations;
+      ANALYZE game_submissions;
+      ANALYZE asset_submissions;
+      ANALYZE session;
+    `);
+    console.log('0004_fix_rls_for_express completed.');
+
     console.log('All migrations completed successfully!');
     process.exit(0);
   } catch (error) {

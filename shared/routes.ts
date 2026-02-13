@@ -4,6 +4,13 @@ import {
   insertUserSchema, loginSchema, users 
 } from './schema';
 
+// Base URL for API requests
+// In production, use the backend URL from Render
+// In development, use relative paths (same origin)
+const API_BASE_URL = typeof window !== 'undefined' 
+  ? (window as any).ENV?.API_URL || ''
+  : '';
+
 export const errorSchemas = {
   validation: z.object({
     message: z.string(),
@@ -18,7 +25,7 @@ export const api = {
   registrations: {
     create: {
       method: 'POST' as const,
-      path: '/api/registrations' as const,
+      path: `${API_BASE_URL}/api/registrations` as const,
       input: insertRegistrationSchema,
       responses: {
         201: z.custom<typeof registrations.$inferSelect>(),
@@ -29,7 +36,7 @@ export const api = {
   auth: {
     register: {
       method: 'POST' as const,
-      path: '/api/auth/register' as const,
+      path: `${API_BASE_URL}/api/auth/register` as const,
       input: insertUserSchema,
       responses: {
         201: z.object({
@@ -44,7 +51,7 @@ export const api = {
     },
     login: {
       method: 'POST' as const,
-      path: '/api/auth/login' as const,
+      path: `${API_BASE_URL}/api/auth/login` as const,
       input: loginSchema,
       responses: {
         200: z.object({
@@ -59,14 +66,14 @@ export const api = {
     },
     logout: {
       method: 'POST' as const,
-      path: '/api/auth/logout' as const,
+      path: `${API_BASE_URL}/api/auth/logout` as const,
       responses: {
         200: z.object({ message: z.string() }),
       },
     },
     me: {
       method: 'GET' as const,
-      path: '/api/auth/me' as const,
+      path: `${API_BASE_URL}/api/auth/me` as const,
       responses: {
         200: z.object({
           user: z.object({

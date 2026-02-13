@@ -103,6 +103,13 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Environment configuration for production
+      // This is replaced by Vercel at build time with the actual API URL
+      window.ENV = {
+        API_URL: "%%API_URL%%"
+      };
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

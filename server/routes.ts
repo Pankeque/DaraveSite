@@ -273,6 +273,15 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     });
   });
 
+  // Health check endpoint for Render
+  app.get("/api/health", (_req: Request, res: Response) => {
+    res.status(200).json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV 
+    });
+  });
+
   // Auth - Get current user
   app.get("/api/auth/me", async (req: Request, res: Response) => {
     console.log("[DEBUG] Auth check - Session userId:", req.session.userId);

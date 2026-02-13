@@ -1,6 +1,6 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { rm, readFile } from "fs/promises";
+import { rm, readFile, writeFile } from "fs/promises";
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -37,6 +37,21 @@ async function buildAll() {
 
   console.log("building client...");
   await viteBuild();
+
+  // Replace API_URL placeholder in built HTML files
+  const apiUrl = process.env.API_URL || "";
+  if (apiUrl) {
+    console.log("injecting API_URL:", apiUrl);
+    try {
+      const indexPath = "dist/index.html";
+      let indexHtml = await readFile(indexPath, "utf-8");
+      indexHtml = indexHtml.replace(/"%%API_URL%%"/g, `"${apiUrl}"`);
+      await writeFile(indexPath, indexHtml);
+      console.log("API_URL injected into index.html");
+    } catch (err) {
+      console.log("Note: Could not inject API_URL (this is OK for backend-only builds)");
+    }
+  }
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));

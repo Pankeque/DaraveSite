@@ -24,4 +24,8 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  define: {
+    // Inject VITE_API_URL at build time for production
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || process.env.API_URL || ''),
+  },
 });

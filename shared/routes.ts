@@ -5,11 +5,34 @@ import {
 } from './schema';
 
 // Base URL for API requests
-// In production, use the backend URL from Render
-// In development, use relative paths (same origin)
-const API_BASE_URL = typeof window !== 'undefined' 
-  ? (window as any).ENV?.API_URL || ''
-  : '';
+// In production on Vercel, use VITE_API_URL environment variable
+// In development, use relative paths (same origin via Vite proxy)
+const getApiBaseUrl = (): string => {
+  if (typeof window === 'undefined') return '';
+  
+  // Check for Vite environment variable (set at build time)
+  const viteApiUrl = (import.meta as any).env?.VITE_API_URL;
+  if (viteApiUrl && viteApiUrl !== '%%API_URL%%') {
+    return viteApiUrl;
+  }
+  
+  // Check for window.ENV (for runtime injection)
+  const windowEnv = (window as any).ENV?.API_URL;
+  if (windowEnv && windowEnv !== '%%API_URL%%') {
+    return windowEnv;
+  }
+  
+  // Fallback: detect production and use known backend URL
+  if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+    // Production frontend - use the Render backend
+    return 'https://darave-studios-api.onrender.com';
+  }
+  
+  // Development - use relative paths (Vite proxy)
+  return '';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const errorSchemas = {
   validation: z.object({

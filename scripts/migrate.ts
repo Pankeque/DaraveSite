@@ -252,6 +252,64 @@ async function runMigrations() {
     `);
     console.log('0004_fix_rls_for_express completed.');
 
+    // Migration 0005 - Completely disable RLS for Express server
+    console.log('Running 0005_disable_rls...');
+    await db.execute(sql`
+      -- Disable RLS on all tables (RLS is for Supabase Auth, not Express sessions)
+      ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE registrations DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE game_submissions DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE asset_submissions DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE session DISABLE ROW LEVEL SECURITY;
+      
+      -- Drop all existing RLS policies
+      DROP POLICY IF EXISTS "users_all_authenticated" ON users;
+      DROP POLICY IF EXISTS "users_select_own" ON users;
+      DROP POLICY IF EXISTS "users_admin_select" ON users;
+      DROP POLICY IF EXISTS "users_update_own" ON users;
+      DROP POLICY IF EXISTS "users_admin_update" ON users;
+      DROP POLICY IF EXISTS "users_insert_registration" ON users;
+      DROP POLICY IF EXISTS "users_admin_delete" ON users;
+      
+      DROP POLICY IF EXISTS "registrations_all" ON registrations;
+      DROP POLICY IF EXISTS "registrations_insert_public" ON registrations;
+      DROP POLICY IF EXISTS "registrations_select_own" ON registrations;
+      DROP POLICY IF EXISTS "registrations_admin_all" ON registrations;
+      
+      DROP POLICY IF EXISTS "game_submissions_all" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_insert_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_select_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_admin_all" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_update_own" ON game_submissions;
+      DROP POLICY IF EXISTS "game_submissions_delete_own" ON game_submissions;
+      
+      DROP POLICY IF EXISTS "asset_submissions_all" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_insert_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_select_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_admin_all" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_update_own" ON asset_submissions;
+      DROP POLICY IF EXISTS "asset_submissions_delete_own" ON asset_submissions;
+      
+      DROP POLICY IF EXISTS "session_all" ON session;
+      
+      -- Drop Supabase-specific helper functions
+      DROP FUNCTION IF EXISTS is_admin();
+      DROP FUNCTION IF EXISTS current_user_id();
+      
+      -- Grant permissions to postgres user
+      GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres;
+      GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres;
+      GRANT USAGE ON SCHEMA public TO postgres;
+      
+      -- Analyze tables
+      ANALYZE users;
+      ANALYZE registrations;
+      ANALYZE game_submissions;
+      ANALYZE asset_submissions;
+      ANALYZE session;
+    `);
+    console.log('0005_disable_rls completed.');
+
     console.log('All migrations completed successfully!');
     process.exit(0);
   } catch (error) {

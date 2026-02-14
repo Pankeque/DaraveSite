@@ -105,7 +105,8 @@
     <div id="root"></div>
     <script>
       // Environment configuration for production
-      // This is replaced by Vercel at build time with the actual API URL
+      // The API URL is now determined at runtime with fallback logic
+      // See shared/routes.ts for the implementation
       window.ENV = {
         API_URL: "%%API_URL%%"
       };

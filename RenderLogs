@@ -1,0 +1,53 @@
+2026-02-14T01:27:45.428111911Z ==> Cloning from https://github.com/Pankeque/DaraveSite
+2026-02-14T01:27:45.990885018Z ==> Checking out commit 525acf7ff8538b7c3db175cdcc85425fa7c68ad9 in branch main
+2026-02-14T01:27:47.486008527Z ==> Using Node.js version 22.22.0 (default)
+2026-02-14T01:27:47.512318121Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-02-14T01:27:49.478292247Z ==> Running build command 'npm install && npm run build '...
+2026-02-14T01:27:56.700451605Z 
+2026-02-14T01:27:56.700481416Z added 404 packages, and audited 405 packages in 7s
+2026-02-14T01:27:56.700495886Z 
+2026-02-14T01:27:56.700510726Z 61 packages are looking for funding
+2026-02-14T01:27:56.700528977Z   run `npm fund` for details
+2026-02-14T01:27:56.701518945Z 
+2026-02-14T01:27:56.701529895Z found 0 vulnerabilities
+2026-02-14T01:27:56.86875733Z 
+2026-02-14T01:27:56.86878905Z > rest-express@1.0.0 build
+2026-02-14T01:27:56.86879413Z > node script/build.cjs
+2026-02-14T01:27:56.86879767Z 
+2026-02-14T01:27:57.019249967Z building client...
+2026-02-14T01:27:57.0650934Z vite v7.3.1 building client environment for production...
+2026-02-14T01:27:57.263258153Z transforming...
+2026-02-14T01:27:57.282790372Z ✓ 3 modules transformed.
+2026-02-14T01:27:57.28319487Z ✗ Build failed in 195ms
+2026-02-14T01:27:57.283550916Z [vite:css] Failed to load PostCSS config (searchPath: /opt/render/project/src/client): [Error] Loading PostCSS Plugin failed: Cannot find module 'autoprefixer'
+2026-02-14T01:27:57.283559026Z Require stack:
+2026-02-14T01:27:57.283563966Z - /opt/render/project/src/postcss.config.js
+2026-02-14T01:27:57.283567637Z 
+2026-02-14T01:27:57.283572006Z (@/opt/render/project/src/postcss.config.js)
+2026-02-14T01:27:57.283576777Z Error: Loading PostCSS Plugin failed: Cannot find module 'autoprefixer'
+2026-02-14T01:27:57.283580907Z Require stack:
+2026-02-14T01:27:57.283585397Z - /opt/render/project/src/postcss.config.js
+2026-02-14T01:27:57.283589387Z 
+2026-02-14T01:27:57.283593537Z (@/opt/render/project/src/postcss.config.js)
+2026-02-14T01:27:57.283598397Z     at load (file:///opt/render/project/src/node_modules/vite/dist/node/chunks/config.js:7660:10)
+2026-02-14T01:27:57.283602497Z     at async Promise.all (index 1)
+2026-02-14T01:27:57.283606467Z     at async plugins (file:///opt/render/project/src/node_modules/vite/dist/node/chunks/config.js:7682:11)
+2026-02-14T01:27:57.283610637Z     at async processResult (file:///opt/render/project/src/node_modules/vite/dist/node/chunks/config.js:7721:13)
+2026-02-14T01:27:57.283615027Z file: /opt/render/project/src/client/src/index.css
+2026-02-14T01:27:57.283619227Z  {
+2026-02-14T01:27:57.283623567Z   code: 'PLUGIN_ERROR',
+2026-02-14T01:27:57.283627838Z   plugin: 'vite:css',
+2026-02-14T01:27:57.283631728Z   hook: 'transform',
+2026-02-14T01:27:57.283635438Z   id: '/opt/render/project/src/client/src/index.css',
+2026-02-14T01:27:57.283639448Z   watchFiles: [
+2026-02-14T01:27:57.283643328Z     '/opt/render/project/src/client/index.html',
+2026-02-14T01:27:57.283647898Z     '/opt/render/project/src/client/src/main.tsx',
+2026-02-14T01:27:57.283666698Z     '/opt/render/project/src/package.json',
+2026-02-14T01:27:57.283669698Z     '/opt/render/project/src/node_modules/react/jsx-runtime.js',
+2026-02-14T01:27:57.283672258Z     '/opt/render/project/src/node_modules/react-dom/client.js',
+2026-02-14T01:27:57.283674719Z     '/opt/render/project/src/client/src/App.tsx',
+2026-02-14T01:27:57.283677339Z     '/opt/render/project/src/client/src/index.css'
+2026-02-14T01:27:57.283679808Z   ]
+2026-02-14T01:27:57.283682539Z }
+2026-02-14T01:27:57.338776632Z ==> Build failed 😞
+2026-02-14T01:27:57.338792752Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys

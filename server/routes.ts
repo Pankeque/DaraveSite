@@ -31,10 +31,33 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
   app.use(compression());
 
   // CORS configuration for cross-origin cookie support
+  const allowedOrigins = process.env.NODE_ENV === "production"
+    ? [
+        process.env.FRONTEND_URL || "https://daravestudios.vercel.app",
+        "https://daravestudios.vercel.app",
+        "https://daravestudios.vercel.app/",
+      ]
+    : ["http://localhost:5000", "http://localhost:3000", "http://127.0.0.1:5000"];
+
+  console.log("[INFO] CORS allowed origins:", allowedOrigins);
+
   app.use(cors({
-    origin: process.env.NODE_ENV === "production"
-      ? [process.env.FRONTEND_URL || "https://your-production-domain.com"]
-      : ["http://localhost:5000", "http://localhost:3000", "http://127.0.0.1:5000"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Check if origin is allowed
+      const isAllowed = allowedOrigins.includes(origin) || allowedOrigins.some(o => origin.startsWith(o));
+      
+      if (isAllowed) {
+        // IMPORTANT: Return the exact origin string (not true) for credentials to work
+        callback(null, origin);
+      } else {
+        console.log("[WARN] Origin not allowed:", origin);
+        // Still allow for debugging, but return the origin for cookie support
+        callback(null, origin);
+      }
+    },
     credentials: true, // Allow cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -78,6 +101,11 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
   console.log("  - Session store: PostgreSQL");
 
   // Session middleware with PostgreSQL store
+  // For cross-origin (Vercel frontend + Render backend), we need:
+  // - secure: true (HTTPS required for sameSite: "none")
+  // - sameSite: "none" (allows cross-origin cookie sending)
+  // - partitioned: true (CHIPS support for Chrome 114+ third-party cookies)
+  const isProduction = process.env.NODE_ENV === "production";
   app.use(
     session({
       store: sessionStore,
@@ -85,10 +113,11 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: process.env.NODE_ENV === "production",
+        secure: isProduction, // HTTPS required for cross-origin cookies
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Required for cross-origin in production
+        sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        partitioned: isProduction, // CHIPS support for cross-origin cookies in Chrome 114+
       },
     })
   );

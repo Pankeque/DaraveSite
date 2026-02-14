@@ -1,0 +1,62 @@
+2026-02-14T01:48:49.060090827Z added 408 packages, and audited 409 packages in 6s
+2026-02-14T01:48:49.060120718Z 
+2026-02-14T01:48:49.060129928Z 63 packages are looking for funding
+2026-02-14T01:48:49.060165929Z   run `npm fund` for details
+2026-02-14T01:48:49.061203688Z 
+2026-02-14T01:48:49.061217458Z found 0 vulnerabilities
+2026-02-14T01:48:49.245994278Z 
+2026-02-14T01:48:49.246014208Z > rest-express@1.0.0 build
+2026-02-14T01:48:49.246019588Z > node script/build.cjs
+2026-02-14T01:48:49.246022859Z 
+2026-02-14T01:48:49.403911079Z building client...
+2026-02-14T01:48:49.44705209Z vite v7.3.1 building client environment for production...
+2026-02-14T01:48:49.839446754Z transforming...
+2026-02-14T01:48:53.903976418Z ✓ 2198 modules transformed.
+2026-02-14T01:48:54.129434633Z rendering chunks...
+2026-02-14T01:48:54.307510228Z computing gzip size...
+2026-02-14T01:48:54.319794556Z ../dist/index.html                           6.67 kB │ gzip:   1.91 kB
+2026-02-14T01:48:54.319880768Z ../dist/assets/index-ZJmc45Ua.css           85.79 kB │ gzip:  13.54 kB
+2026-02-14T01:48:54.32000752Z ../dist/assets/not-found-BqmCZfPP.js         1.71 kB │ gzip:   0.67 kB
+2026-02-14T01:48:54.320143003Z ../dist/assets/PrivacyPolicy-yoGPqYqZ.js     6.20 kB │ gzip:   1.83 kB
+2026-02-14T01:48:54.320204934Z ../dist/assets/TermsOfService-_AdsSZw-.js    6.99 kB │ gzip:   2.03 kB
+2026-02-14T01:48:54.320211094Z ../dist/assets/Form-CQdBFh1o.js              9.99 kB │ gzip:   2.43 kB
+2026-02-14T01:48:54.320257225Z ../dist/assets/Home-v7NhlpA7.js             84.08 kB │ gzip:  26.11 kB
+2026-02-14T01:48:54.320271205Z ../dist/assets/proxy-MJ_qTNQV.js           111.59 kB │ gzip:  36.75 kB
+2026-02-14T01:48:54.320279395Z ../dist/assets/index-C7uBrfPO.js           359.51 kB │ gzip: 109.98 kB
+2026-02-14T01:48:54.32052172Z ✓ built in 4.85s
+2026-02-14T01:48:54.320632122Z building server...
+2026-02-14T01:48:54.491614015Z 
+2026-02-14T01:48:54.491634096Z   dist/index.cjs  1.1mb ⚠️
+2026-02-14T01:48:54.491638926Z 
+2026-02-14T01:48:54.491643796Z ⚡ Done in 157ms
+2026-02-14T01:48:55.877616732Z ==> Uploading build...
+2026-02-14T01:49:04.688509198Z ==> Uploaded in 5.7s. Compression took 3.1s
+2026-02-14T01:49:04.716436676Z ==> Build successful 🎉
+2026-02-14T01:49:07.796979774Z ==> Deploying...
+2026-02-14T01:49:07.868655151Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-02-14T01:49:31.433946657Z ==> Running 'npm run start'
+2026-02-14T01:49:32.329017373Z 
+2026-02-14T01:49:32.329048783Z > rest-express@1.0.0 start
+2026-02-14T01:49:32.329055574Z > NODE_ENV=production node dist/index.cjs
+2026-02-14T01:49:32.329057994Z 
+2026-02-14T01:49:33.232504588Z [INFO] Session Configuration:
+2026-02-14T01:49:33.232786005Z   - NODE_ENV: production
+2026-02-14T01:49:33.232872487Z   - SESSION_SECRET set: true
+2026-02-14T01:49:33.232915197Z   - DATABASE_URL set: true
+2026-02-14T01:49:33.232949368Z   - Cookie secure: true
+2026-02-14T01:49:33.232953958Z   - Session store: PostgreSQL
+2026-02-14T01:49:33.234658155Z /opt/render/project/src/dist/index.cjs:71
+2026-02-14T01:49:34.94536055Z ==> Exited with status 1
+2026-02-14T01:49:34.948143621Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2026-02-14T01:49:38.696923556Z ==> Running 'npm run start'
+2026-02-14T01:49:39.599209746Z 
+2026-02-14T01:49:39.59939073Z > rest-express@1.0.0 start
+2026-02-14T01:49:39.59939836Z > NODE_ENV=production node dist/index.cjs
+2026-02-14T01:49:39.59940034Z 
+2026-02-14T01:49:40.595354866Z [INFO] Session Configuration:
+2026-02-14T01:49:40.595582181Z   - NODE_ENV: production
+2026-02-14T01:49:40.595630022Z   - SESSION_SECRET set: true
+2026-02-14T01:49:40.595645532Z   - DATABASE_URL set: true
+2026-02-14T01:49:40.595706284Z   - Cookie secure: true
+2026-02-14T01:49:40.595709884Z   - Session store: PostgreSQL
+2026-02-14T01:49:40.688212155Z /opt/render/project/src/dist/index.cjs:71

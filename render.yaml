@@ -7,7 +7,7 @@ services:
     env: node
     region: oregon # or ohio, frankfurt, singapore, sydney
     plan: free # Free tier - spins down after inactivity
-    buildCommand: npm ci --include=dev && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm run start
     healthCheckPath: /api/health
     envVars:

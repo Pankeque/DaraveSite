@@ -10,7 +10,7 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Parse DATABASE_URL and force IPv4 to avoid IPv6 connectivity issues on Render
+// Parse DATABASE URL and extract components
 const parseDatabaseUrl = (url: string) => {
   const parsed = new URL(url);
   return {
@@ -19,14 +19,19 @@ const parseDatabaseUrl = (url: string) => {
     database: parsed.pathname.slice(1),
     user: parsed.username,
     password: parsed.password,
-    // Force IPv4 to avoid ENETUNREACH errors with IPv6 on Render
-    family: 4 as const,
   };
 };
 
 // Pool configuration optimized for serverless/production
+// Note: Using connection string directly with ssl option for Supabase/Neon
 export const pool = new pg.Pool({
-  ...parseDatabaseUrl(process.env.DATABASE_URL),
+  connectionString: process.env.DATABASE_URL,
+  // Force IPv4 to avoid ENETUNREACH errors with IPv6 on Render
+  // @ts-ignore - pg types don't include 'family' but it's supported
+  family: 4,
+  ssl: process.env.DATABASE_URL.includes('supabase') || process.env.DATABASE_URL.includes('neon') 
+    ? { rejectUnauthorized: false } 
+    : false,
   max: 10, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
   connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection cannot be established

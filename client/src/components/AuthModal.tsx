@@ -10,17 +10,58 @@ interface AuthModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Password validation helper
+function validatePassword(password: string): { isValid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  if (password.length < 8) {
+    errors.push("at least 8 characters");
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push("an uppercase letter");
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push("a lowercase letter");
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push("a number");
+  }
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    errors.push("a special character");
+  }
+  
+  return { isValid: errors.length === 0, errors };
+}
+
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const { login, register } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password for registration
+    if (!isLogin) {
+      const validation = validatePassword(password);
+      if (!validation.isValid) {
+        const errorMsg = `Password must contain: ${validation.errors.join(", ")}`;
+        setPasswordError(errorMsg);
+        toast({
+          title: "Invalid Password",
+          description: errorMsg,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
+    setPasswordError(null);
     setIsLoading(true);
 
     try {
@@ -44,17 +85,10 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       setPassword("");
       setName("");
     } catch (error: any) {
-      // Display detailed technical error information for debugging
-      const errorTitle = isLogin ? "LOGIN FAILED - Technical Details" : "REGISTRATION FAILED - Technical Details";
-      const errorDescription = error.message || "Unknown error - no message available";
+      const errorTitle = isLogin ? "Login Failed" : "Registration Failed";
+      const errorDescription = error.message || "An unexpected error occurred. Please try again.";
       
-      console.error("[AUTH ERROR]", {
-        title: errorTitle,
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-        fullError: error
-      });
+      console.error("[AUTH ERROR]", error);
       
       toast({
         title: errorTitle,
@@ -123,16 +157,28 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError(null);
+              }}
+              className={`w-full px-4 py-3 rounded-lg bg-zinc-900 border text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200 ${
+                passwordError ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-primary'
+              }`}
               placeholder="••••••••"
               required
               minLength={8}
             />
             {!isLogin && (
-              <p className="text-xs text-zinc-500 mt-1">
-                Must be 8+ characters with uppercase, lowercase, number, and special character
-              </p>
+              <>
+                {passwordError && (
+                  <p className="text-xs text-red-400 mt-1">
+                    {passwordError}
+                  </p>
+                )}
+                <p className="text-xs text-zinc-500 mt-1">
+                  Must be 8+ characters with uppercase, lowercase, number, and special character
+                </p>
+              </>
             )}
           </div>
 

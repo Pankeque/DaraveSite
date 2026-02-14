@@ -122,18 +122,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await safeParseJSON(res);
       console.log("[DEBUG] Login error response:", { data, error });
       
-      // Build detailed error message for debugging
-      const errorDetails = formatDetailedError(
-        { 
-          ...data, 
-          parseError: error,
-          responseBody: data 
-        }, 
-        res.status, 
-        api.auth.login.path
-      );
+      // Extract user-friendly error message
+      let userMessage = "Login failed. Please try again.";
       
-      throw new Error(`LOGIN FAILED: ${errorDetails}`);
+      if (data?.errorType === "ZodError" && data?.validationErrors) {
+        // Extract the first validation error message
+        const validationErrors = data.validationErrors;
+        if (Array.isArray(validationErrors) && validationErrors.length > 0) {
+          userMessage = validationErrors[0].message || userMessage;
+        }
+      } else if (data?.message) {
+        userMessage = data.message;
+      }
+      
+      throw new Error(userMessage);
     }
 
     const { data, error } = await safeParseJSON(res);
@@ -160,18 +162,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await safeParseJSON(res);
       console.log("[DEBUG] Register error response:", { data, error });
       
-      // Build detailed error message for debugging
-      const errorDetails = formatDetailedError(
-        { 
-          ...data, 
-          parseError: error,
-          responseBody: data 
-        }, 
-        res.status, 
-        api.auth.register.path
-      );
+      // Extract user-friendly error message
+      let userMessage = "Registration failed. Please try again.";
       
-      throw new Error(`REGISTRATION FAILED: ${errorDetails}`);
+      if (data?.errorType === "ZodError" && data?.validationErrors) {
+        // Extract the first validation error message
+        const validationErrors = data.validationErrors;
+        if (Array.isArray(validationErrors) && validationErrors.length > 0) {
+          userMessage = validationErrors[0].message || userMessage;
+        }
+      } else if (data?.message) {
+        userMessage = data.message;
+      }
+      
+      throw new Error(userMessage);
     }
 
     const { data, error } = await safeParseJSON(res);

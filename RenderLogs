@@ -1,0 +1,30 @@
+2026-02-14T00:58:11.412200209Z ==> Cloning from https://github.com/Pankeque/DaraveSite
+2026-02-14T00:58:11.989014935Z ==> Checking out commit e456a9f70f2001d538dfe69f6d32540d90ab02f6 in branch main
+2026-02-14T00:58:13.470360238Z ==> Using Node.js version 22.22.0 (default)
+2026-02-14T00:58:13.493902475Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-02-14T00:58:15.501364183Z ==> Running build command 'npm install && npm run build '...
+2026-02-14T00:58:21.247632694Z 
+2026-02-14T00:58:21.247652595Z added 404 packages, and audited 405 packages in 6s
+2026-02-14T00:58:21.247660475Z 
+2026-02-14T00:58:21.247663535Z 61 packages are looking for funding
+2026-02-14T00:58:21.247670305Z   run `npm fund` for details
+2026-02-14T00:58:21.248622368Z 
+2026-02-14T00:58:21.248629488Z found 0 vulnerabilities
+2026-02-14T00:58:21.41436429Z 
+2026-02-14T00:58:21.414379681Z > rest-express@1.0.0 build
+2026-02-14T00:58:21.414382081Z > node script/build.js
+2026-02-14T00:58:21.414383911Z 
+2026-02-14T00:58:21.442023357Z file:///opt/render/project/src/script/build.js:1
+2026-02-14T00:58:21.442036667Z const { build: esbuild } = require("esbuild");
+2026-02-14T00:58:21.442039297Z                            ^
+2026-02-14T00:58:21.442040997Z 
+2026-02-14T00:58:21.442043327Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2026-02-14T00:58:21.442046727Z This file is being treated as an ES module because it has a '.js' file extension and '/opt/render/project/src/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+2026-02-14T00:58:21.442048937Z     at file:///opt/render/project/src/script/build.js:1:28
+2026-02-14T00:58:21.442050848Z     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+2026-02-14T00:58:21.442052588Z     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+2026-02-14T00:58:21.442054277Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-02-14T00:58:21.442056197Z 
+2026-02-14T00:58:21.442057908Z Node.js v22.22.0
+2026-02-14T00:58:21.483737232Z ==> Build failed 😞
+2026-02-14T00:58:21.483756812Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys

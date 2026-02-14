@@ -3,8 +3,10 @@ import fs from "fs";
 import path from "path";
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "public");
-  if (!fs.existsSync(distPath)) {
+  // When bundled with esbuild, __dirname points to dist/ directory
+  // and static files are in the same dist/ directory
+  const distPath = __dirname;
+  if (!fs.existsSync(path.join(distPath, "index.html"))) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`,
     );
@@ -19,6 +21,6 @@ export function serveStatic(app: Express) {
     if (req.path.startsWith("/api")) {
       return res.status(404).json({ message: "API endpoint not found" });
     }
-    res.sendFile(path.resolve(distPath, "index.html"));
+    res.sendFile(path.join(distPath, "index.html"));
   });
 }

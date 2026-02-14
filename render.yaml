@@ -9,6 +9,7 @@ services:
     plan: free # Free tier - spins down after inactivity
     buildCommand: npm install && npm run build
     startCommand: npm run start
+    preDeployCommand: npx tsx scripts/migrate.ts
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV

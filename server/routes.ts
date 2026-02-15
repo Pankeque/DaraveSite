@@ -112,12 +112,14 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       secret: process.env.SESSION_SECRET || "darave-studios-secret-key-change-in-production",
       resave: false,
       saveUninitialized: false,
+      rolling: true, // Reset session expiration on each request
       cookie: {
         secure: isProduction, // HTTPS required for cross-origin cookies
         httpOnly: true,
         sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days for better persistence
         partitioned: isProduction, // CHIPS support for cross-origin cookies in Chrome 114+
+        path: "/", // Ensure cookie is available on all paths
       },
     })
   );

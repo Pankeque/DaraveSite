@@ -2,33 +2,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-// Get API base URL for production
-const getApiBaseUrl = (): string => {
-  if (typeof window === 'undefined') return '';
-  
-  // Check for Vite environment variable (set at build time)
-  const viteApiUrl = (import.meta as any).env?.VITE_API_URL;
-  if (viteApiUrl && viteApiUrl !== '%%API_URL%%') {
-    return viteApiUrl;
-  }
-  
-  // Check for window.ENV (for runtime injection)
-  const windowEnv = (window as any).ENV?.API_URL;
-  if (windowEnv && windowEnv !== '%%API_URL%%') {
-    return windowEnv;
-  }
-  
-  // Fallback: detect production and use known backend URL
-  if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
-    // Production frontend - use the Render backend
-    return 'https://darave-studios-api.onrender.com';
-  }
-  
-  // Development - use relative paths (Vite proxy)
-  return '';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+// All API requests are now same-origin (unified Vercel deployment)
+// No need for API_BASE_URL - everything is on the same domain
 
 export default function Form() {
   const { toast } = useToast();
@@ -87,7 +62,7 @@ export default function Form() {
     console.log("[DEBUG] Game form submission started:", gameForm);
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/submissions/game`, {
+      const response = await fetch("/api/submissions/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -147,7 +122,7 @@ export default function Form() {
     console.log("[DEBUG] Asset form submission started:", assetForm);
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/submissions/asset`, {
+      const response = await fetch("/api/submissions/asset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

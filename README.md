@@ -1,72 +1,151 @@
-# Darave Studios Landing Page
+# Darave Studios - Fullstack Application
 
-## Overview
+A modern fullstack application for Darave Studios, built with React, Vite, and Vercel Postgres.
 
-This is a landing page and registration system for **Darave Studios**, a creative studio focused on game development, asset purchasing, and portfolio applications. The app features a visually rich, dark-themed single-page marketing site with animated elements (ripple backgrounds, marquee text, scroll-based transforms) and a registration modal that collects user emails and interest areas, storing them in a PostgreSQL database.
+## Architecture
 
-The project follows a monorepo structure with three main directories: `client/` (React frontend), `server/` (Express backend), and `shared/` (shared schemas and route definitions).
+This application runs entirely on Vercel with a unified architecture:
 
-## User Preferences
+- **Frontend**: React + Vite + TanStack Query
+- **Backend**: Vercel Serverless Functions
+- **Database**: Vercel Postgres (Neon-powered)
+- **Session**: iron-session (encrypted cookies)
 
-Preferred communication style: Simple, everyday language.
+## Key Benefits
 
-## System Architecture
+- ✅ **No CORS issues** - Everything on the same domain
+- ✅ **First-party cookies** - No browser blocking
+- ✅ **No cold starts** - Vercel functions stay warm
+- ✅ **Simpler architecture** - Single platform
 
-### Directory Structure
-- **`client/`** — React SPA (Single Page Application) with Vite
-- **`server/`** — Express API server
-- **`shared/`** — Shared TypeScript types, Zod schemas, and route definitions used by both client and server
+## Project Structure
 
-### Frontend (`client/src/`)
-- **Framework**: React with TypeScript, bundled by Vite
-- **Routing**: `wouter` (lightweight client-side router)
-- **State/Data fetching**: `@tanstack/react-query` for server state management
-- **UI Components**: shadcn/ui (new-york style) built on Radix UI primitives, styled with Tailwind CSS
-- **Animations**: `framer-motion` for ripple effects, scroll reveals, marquee, and transitions
-- **Forms**: `react-hook-form` with `@hookform/resolvers` and Zod validation
-- **Icons**: `lucide-react`
-- **Design Theme**: Dark theme with deep black (#0a0a0a) background and lime green (#a3ff00) accent. Uses Inter and Manrope fonts from Google Fonts. CSS variables defined in `client/src/index.css`.
-- **Path aliases**: `@/` maps to `client/src/`, `@shared/` maps to `shared/`
+```
+├── api/                    # Vercel Serverless Functions
+│   ├── auth/              # Authentication endpoints
+│   │   ├── register.ts
+│   │   ├── login.ts
+│   │   ├── logout.ts
+│   │   └── me.ts
+│   ├── submissions/       # Form submission endpoints
+│   │   ├── game.ts
+│   │   └── asset.ts
+│   ├── registrations/     # Registration endpoint
+│   │   └── index.ts
+│   └── health.ts          # Health check endpoint
+├── client/                # React frontend
+│   ├── src/
+│   │   ├── components/   # UI components
+│   │   ├── contexts/     # React contexts (Auth)
+│   │   ├── hooks/        # Custom hooks
+│   │   ├── lib/          # Utilities
+│   │   └── pages/        # Page components
+│   └── index.html
+├── lib/                   # Shared server utilities
+│   ├── db.ts             # Vercel Postgres connection
+│   └── session.ts        # iron-session configuration
+├── shared/               # Shared types and schemas
+│   ├── schema.ts         # Drizzle schema definitions
+│   └── routes.ts         # API route definitions
+├── drizzle/              # Database migrations
+├── drizzle.config.ts     # Drizzle configuration
+└── vercel.json           # Vercel deployment configuration
+```
 
-### Backend (`server/`)
-- **Framework**: Express 5 running on Node.js with TypeScript (executed via `tsx`)
-- **API Pattern**: REST endpoints defined in `server/routes.ts`, with route contracts (path, method, input/output schemas) defined in `shared/routes.ts`
-- **Validation**: Zod schemas shared between client and server for input validation
-- **Storage Layer**: `server/storage.ts` defines a `DatabaseStorage` class implementing `IStorage` interface, providing an abstraction over the database
-- **Dev Server**: Vite dev server is integrated as middleware in development mode (`server/vite.ts`), with HMR support
-- **Production**: Static files served from `dist/public` via Express
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+
+### Setup
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Set up environment variables (see `.env.example`)
+
+3. Run development server:
+   ```bash
+   npm run dev
+   ```
 
 ### Database
-- **Database**: PostgreSQL (required via `DATABASE_URL` environment variable)
-- **ORM**: Drizzle ORM with `drizzle-zod` for automatic Zod schema generation from table definitions
-- **Schema Location**: `shared/schema.ts`
-- **Current Tables**:
-  - `registrations` — stores email signups with fields: `id` (serial PK), `email` (text, required), `interest` (text, optional), `createdAt` (timestamp, auto-set)
-- **Migrations**: Managed via `drizzle-kit push` (`npm run db:push`), config in `drizzle.config.ts`, migrations output to `./migrations/`
 
-### Shared Contract Pattern
-The `shared/routes.ts` file defines API contracts that both client and server consume. Each route specifies its HTTP method, path, input Zod schema, and response schemas by status code. This ensures type safety across the full stack without code generation.
+Push schema changes to database:
+```bash
+npm run db:push
+```
 
-### Build System
-- **Development**: `npm run dev` runs `tsx server/index.ts` which starts Express with Vite middleware for HMR
-- **Production Build**: `npm run build` runs a custom build script (`script/build.ts`) that:
-  1. Builds the React client with Vite (output to `dist/public`)
-  2. Bundles the server with esbuild (output to `dist/index.cjs`), externalizing most deps but bundling common ones for faster cold starts
-- **Production Start**: `npm start` runs `node dist/index.cjs`
+Generate migrations:
+```bash
+npm run db:generate
+```
 
-## External Dependencies
+## Deployment
 
-### Required Services
-- **PostgreSQL Database**: Must be provisioned and accessible via `DATABASE_URL` environment variable. Used for all data persistence.
+### Vercel Postgres Setup
 
-### Key NPM Packages
-- **Drizzle ORM + drizzle-zod**: Database ORM and schema-to-Zod generation
-- **Express 5**: HTTP server framework
-- **Vite + @vitejs/plugin-react**: Frontend build tool and dev server
-- **@tanstack/react-query**: Async state management for API calls
-- **framer-motion**: Animation library for UI effects
-- **shadcn/ui + Radix UI**: Component library ecosystem
-- **Tailwind CSS**: Utility-first CSS framework
-- **Zod**: Runtime schema validation (shared between client/server)
-- **wouter**: Lightweight React router
-- **connect-pg-simple**: PostgreSQL session store (available but not currently active in routes)
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Navigate to your project → Storage
+3. Create a new Postgres database
+4. Link it to your project
+5. Environment variables are auto-injected
+
+### Deploy
+
+Push to your main branch and Vercel will automatically deploy.
+
+### Environment Variables
+
+Required environment variables (auto-set by Vercel Postgres):
+
+| Variable | Description |
+|----------|-------------|
+| `POSTGRES_URL` | Vercel Postgres connection URL |
+| `SESSION_SECRET` | Secret for iron-session (32+ chars) |
+| `NODE_ENV` | Environment (production/development) |
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login user |
+| POST | `/api/auth/logout` | Logout user |
+| GET | `/api/auth/me` | Get current user |
+
+### Submissions
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/submissions/game` | Submit game metrics |
+| POST | `/api/submissions/asset` | Submit asset information |
+
+### Other
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/registrations` | Register email for interest list |
+| GET | `/api/health` | Health check endpoint |
+
+## Tech Stack
+
+- **Frontend**: React 18, Vite, TanStack Query, Tailwind CSS, shadcn/ui
+- **Backend**: Vercel Serverless Functions, Drizzle ORM
+- **Database**: Vercel Postgres (Neon)
+- **Authentication**: bcryptjs + iron-session
+- **Validation**: Zod
+
+## Migration from Render
+
+This project was migrated from a Render-hosted Express.js backend to Vercel Serverless Functions. See [`plans/vercel-migration-plan.md`](plans/vercel-migration-plan.md) for details.
+
+## License
+
+MIT

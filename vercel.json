@@ -1,10 +1,51 @@
 {
   "rewrites": [
     {
-      "source": "/:path*",
+      "source": "/api/auth/register",
+      "destination": "/api/auth/register"
+    },
+    {
+      "source": "/api/auth/login",
+      "destination": "/api/auth/login"
+    },
+    {
+      "source": "/api/auth/logout",
+      "destination": "/api/auth/logout"
+    },
+    {
+      "source": "/api/auth/me",
+      "destination": "/api/auth/me"
+    },
+    {
+      "source": "/api/submissions/game",
+      "destination": "/api/submissions/game"
+    },
+    {
+      "source": "/api/submissions/asset",
+      "destination": "/api/submissions/asset"
+    },
+    {
+      "source": "/api/registrations",
+      "destination": "/api/registrations/index"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@3"
+    }
+  },
   "trailingSlash": false,
   "headers": [
     {

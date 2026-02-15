@@ -338,11 +338,11 @@ function PortfolioCard({ title, description, link, image }: { title: string; des
       whileHover={{ y: -10 }}
       className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
     >
-      <div className="aspect-video w-full overflow-hidden">
+      <div className="aspect-square w-full overflow-hidden bg-zinc-950">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="p-6">

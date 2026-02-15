@@ -2,9 +2,104 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Run migrations before starting server
+async function runMigrations() {
+  console.log("[MIGRATION] Running database migrations...");
+  
+  try {
+    // Create users table
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        name TEXT NOT NULL,
+        supabase_user_id TEXT UNIQUE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
+    `);
+    console.log("[MIGRATION] Users table ready");
+
+    // Create registrations table
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS registrations (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
+        interest TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      
+      CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations (email);
+    `);
+    console.log("[MIGRATION] Registrations table ready");
+
+    // Create session table
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS session (
+        sid VARCHAR NOT NULL COLLATE "default",
+        sess JSON NOT NULL,
+        expire TIMESTAMP(6) NOT NULL
+      );
+      
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'session_pkey'
+        ) THEN
+          ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid);
+        END IF;
+      END $$;
+      
+      CREATE INDEX IF NOT EXISTS IDX_session_expire ON session(expire);
+    `);
+    console.log("[MIGRATION] Session table ready");
+
+    // Create game_submissions table
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS game_submissions (
+        id SERIAL PRIMARY KEY,
+        game_name TEXT NOT NULL,
+        game_link TEXT NOT NULL,
+        daily_active_users TEXT,
+        total_visits TEXT,
+        revenue TEXT,
+        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_game_submissions_user_id ON game_submissions(user_id);
+    `);
+    console.log("[MIGRATION] Game submissions table ready");
+
+    // Create asset_submissions table
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS asset_submissions (
+        id SERIAL PRIMARY KEY,
+        assets_count TEXT,
+        asset_links TEXT,
+        additional_notes TEXT,
+        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_asset_submissions_user_id ON asset_submissions(user_id);
+    `);
+    console.log("[MIGRATION] Asset submissions table ready");
+
+    console.log("[MIGRATION] All migrations completed successfully!");
+  } catch (error) {
+    console.error("[MIGRATION] Migration failed:", error);
+    throw error;
+  }
+}
 
 declare module "http" {
   interface IncomingMessage {
@@ -60,6 +155,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Run migrations before starting the server
+  await runMigrations();
+  
   await registerRoutes(httpServer, app);
 
   // Catch-all for unmatched API routes - return JSON 404 instead of HTML

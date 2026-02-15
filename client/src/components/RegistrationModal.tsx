@@ -33,7 +33,7 @@ export function RegistrationModal({ open, onOpenChange }: RegistrationModalProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md p-0 overflow-hidden gap-0">
+      <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md p-0 overflow-hidden gap-0 max-h-[85vh]">
         <div className="bg-primary/10 p-6 border-b border-zinc-800">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold tracking-tighter text-white">Join Darave Studios</DialogTitle>

@@ -102,7 +102,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md p-0 overflow-hidden gap-0 z-[200]">
+      <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md p-0 overflow-hidden gap-0">
         <div className="bg-primary/10 p-6 border-b border-zinc-800">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold tracking-tighter text-white">

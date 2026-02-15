@@ -26,24 +26,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log("[REGISTER] Starting registration process");
+    console.log("[REGISTER] DB_URL exists:", !!process.env.DATABASE_URL);
+    console.log("[REGISTER] POSTGRES_URL exists:", !!process.env.POSTGRES_URL);
+    
     // Parse and validate request body
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
     const data = registerSchema.parse(body);
+    console.log("[REGISTER] Validated data for email:", data.email);
 
     // Check if user already exists
+    console.log("[REGISTER] Checking for existing user...");
     const existingUsers = await db
       .select()
       .from(users)
       .where(eq(users.email, data.email));
 
     if (existingUsers.length > 0) {
+      console.log("[REGISTER] User already exists");
       return res.status(400).json({ message: "User already exists" });
     }
 
     // Hash password
+    console.log("[REGISTER] Hashing password...");
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     // Create user
+    console.log("[REGISTER] Creating user...");
     const [user] = await db
       .insert(users)
       .values({
@@ -53,10 +62,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
       .returning();
 
+    console.log("[REGISTER] User created with ID:", user.id);
+
     // Set session
+    console.log("[REGISTER] Setting session...");
     await setUserSession(req, res, user.id);
 
     // Return user data (without password)
+    console.log("[REGISTER] Success!");
     return res.status(201).json({
       user: {
         id: user.id,
@@ -65,7 +78,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
     });
   } catch (error: any) {
-    console.error("[REGISTER ERROR]", error);
+    console.error("[REGISTER ERROR] Full error:", error);
+    console.error("[REGISTER ERROR] Message:", error.message);
+    console.error("[REGISTER ERROR] Stack:", error.stack);
 
     if (error.name === "ZodError") {
       return res.status(400).json({
@@ -78,6 +93,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({
       message: "Internal server error",
       errorType: error.name || "UnknownError",
+      errorMessage: error.message,
     });
   }
 }

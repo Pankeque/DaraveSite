@@ -336,7 +336,7 @@ function PortfolioCard({ title, description, link, image }: { title: string; des
   return (
     <motion.div
       whileHover={{ y: -10 }}
-      className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300"
+      className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300 flex flex-col"
     >
       <div className="aspect-square w-full overflow-hidden bg-zinc-950">
         <img
@@ -345,9 +345,9 @@ function PortfolioCard({ title, description, link, image }: { title: string; des
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
         />
       </div>
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-1">
         <h3 className="text-xl font-bold mb-3">{title}</h3>
-        <p className="text-zinc-500 text-sm leading-relaxed mb-6">
+        <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-1">
           {description}
         </p>
         <a

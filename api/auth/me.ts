@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "../../lib/db";
-import { users } from "@shared/schema";
+import { db } from "../../lib/db.js";
+import { users } from "../../shared/schema.js";
 import { eq } from "drizzle-orm";
-import { getSession } from "../../lib/session";
+import { getSession } from "../../lib/session.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow GET method

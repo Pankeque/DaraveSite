@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "../../lib/db";
-import { users } from "@shared/schema";
+import { db } from "../../lib/db.js";
+import { users } from "../../shared/schema.js";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { setUserSession } from "../../lib/session";
+import { setUserSession } from "../../lib/session.js";
 import { z } from "zod";
 
 // Validation schema

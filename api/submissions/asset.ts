@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "../../lib/db";
-import { assetSubmissions } from "@shared/schema";
-import { getSession } from "../../lib/session";
+import { db } from "../../lib/db.js";
+import { assetSubmissions } from "../../shared/schema.js";
+import { getSession } from "../../lib/session.js";
 import { z } from "zod";
 
 // Validation schema

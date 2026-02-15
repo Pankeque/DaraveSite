@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "../../lib/db";
-import { registrations } from "@shared/schema";
+import { db } from "../../lib/db.js";
+import { registrations } from "../../shared/schema.js";
 import { z } from "zod";
 
 // Validation schema

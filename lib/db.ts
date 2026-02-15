@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import * as schema from "@shared/schema";
+import * as schema from "../shared/schema.js";
 
 // Get database URL from environment
 const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;

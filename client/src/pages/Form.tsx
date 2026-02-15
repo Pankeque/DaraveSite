@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
@@ -7,6 +8,7 @@ import { Loader2 } from "lucide-react";
 export default function Form() {
   const { toast } = useToast();
   const { user, isLoading } = useAuth();
+  const [_, setLocation] = useLocation();
   const [isRedirecting, setIsRedirecting] = useState(false);
   
   // Game form state - MUST be declared before any early returns (React Hooks rules)
@@ -37,13 +39,15 @@ export default function Form() {
         description: "Please log in to access the form page.",
         variant: "destructive",
       });
-      // Redirect to home after a short delay
+      // Use wouter navigation instead of window.location to preserve session
       const timer = setTimeout(() => {
-        window.location.href = "/";
+        setLocation("/");
       }, 2000);
       return () => clearTimeout(timer);
+    } else {
+      setIsRedirecting(false);
     }
-  }, [user, isLoading, toast]);
+  }, [user, isLoading, toast, setLocation]);
   
   // Show loading state while checking auth or redirecting
   if (isLoading || isRedirecting) {

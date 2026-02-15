@@ -106,7 +106,7 @@ export default function Home() {
                   {user.name}
                 </motion.button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-zinc-950 border-zinc-800 text-white">
+              <DropdownMenuContent className="bg-zinc-950 border-zinc-800 text-white z-[200]">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-zinc-800" />
                 <DropdownMenuItem

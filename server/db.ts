@@ -1,11 +1,8 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "@shared/schema";
-import dns from "dns";
-import { promisify } from "util";
 
 const { Pool } = pg;
-const lookupAsync = promisify(dns.lookup);
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
@@ -27,27 +24,18 @@ const parseDatabaseUrl = (url: string) => {
 
 const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL);
 
-// Determine if SSL is needed
-const needsSsl = process.env.DATABASE_URL.includes('supabase') || 
+// Determine if SSL is needed (Render requires SSL)
+const needsSsl = process.env.DATABASE_URL.includes('render.com') ||
                   process.env.DATABASE_URL.includes('neon') ||
-                  process.env.DATABASE_URL.includes('render.com');
+                  process.env.DATABASE_URL.includes('supabase');
 
-// Synchronously resolve hostname to IPv4 at startup
-let resolvedHost: string;
-try {
-  console.log(`[DB] Resolving ${dbConfig.host} to IPv4...`);
-  const result = dns.lookupSync(dbConfig.host, { family: 4 });
-  resolvedHost = result.address;
-  console.log(`[DB] Resolved ${dbConfig.host} -> ${resolvedHost}`);
-} catch (err) {
-  console.error(`[DB] Failed to resolve ${dbConfig.host}:`, err);
-  // Fall back to original hostname
-  resolvedHost = dbConfig.host;
-}
+// Log database connection info
+console.log(`[DB] Connecting to ${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`);
+console.log(`[DB] SSL enabled: ${needsSsl}`);
 
-// Pool configuration optimized for serverless/production
+// Pool configuration optimized for Render database with IPv4 support
 export const pool = new pg.Pool({
-  host: resolvedHost, // Use resolved IPv4 address
+  host: dbConfig.host,
   port: dbConfig.port,
   database: dbConfig.database,
   user: dbConfig.user,

@@ -1,18 +1,13 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
-import { Loader2 } from "lucide-react";
 
 export default function Form() {
   const { toast } = useToast();
-  const { user, isLoading } = useAuth();
-  const [_, setLocation] = useLocation();
-  const [isRedirecting, setIsRedirecting] = useState(false);
   
-  // Game form state - MUST be declared before any early returns (React Hooks rules)
+  // Game form state
   const [gameForm, setGameForm] = useState({
+    email: "",
     gameName: "",
     gameLink: "",
     dailyActiveUsers: "",
@@ -22,6 +17,7 @@ export default function Form() {
   
   // Asset form state
   const [assetForm, setAssetForm] = useState({
+    email: "",
     assetsCount: "",
     assetLinks: "",
     additionalNotes: "",
@@ -29,44 +25,6 @@ export default function Form() {
   
   const [isGameSubmitting, setIsGameSubmitting] = useState(false);
   const [isAssetSubmitting, setIsAssetSubmitting] = useState(false);
-  
-  // Redirect to home if not authenticated
-  useEffect(() => {
-    if (!isLoading && !user) {
-      setIsRedirecting(true);
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to access the form page.",
-        variant: "destructive",
-      });
-      // Use wouter navigation instead of window.location to preserve session
-      const timer = setTimeout(() => {
-        setLocation("/");
-      }, 2000);
-      return () => clearTimeout(timer);
-    } else {
-      setIsRedirecting(false);
-    }
-  }, [user, isLoading, toast, setLocation]);
-  
-  // Show loading state while checking auth or redirecting
-  if (isLoading || isRedirecting) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-zinc-400">
-            {isRedirecting ? "Redirecting to home..." : "Loading..."}
-          </p>
-        </div>
-      </div>
-    );
-  }
-  
-  // Don't render the form if not authenticated
-  if (!user) {
-    return null;
-  }
 
   // Helper function to safely parse JSON response
   const safeParseJSON = async (res: Response): Promise<{ data: any; error: string | null }> => {
@@ -128,6 +86,7 @@ export default function Form() {
         });
         // Reset form
         setGameForm({
+          email: "",
           gameName: "",
           gameLink: "",
           dailyActiveUsers: "",
@@ -187,6 +146,7 @@ export default function Form() {
         });
         // Reset form
         setAssetForm({
+          email: "",
           assetsCount: "",
           assetLinks: "",
           additionalNotes: "",
@@ -253,6 +213,20 @@ export default function Form() {
             >
               <h2 className="text-2xl font-bold tracking-tight mb-6 text-primary">Game Information</h2>
               <form onSubmit={handleGameSubmit} className="space-y-6 bg-zinc-900/30 p-8 rounded-2xl border border-zinc-800">
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={gameForm.email}
+                    onChange={(e) => setGameForm({ ...gameForm, email: e.target.value })}
+                    placeholder="your@email.com"
+                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  />
+                </div>
+
                 <div className="space-y-4">
                   <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
                     Game Name *
@@ -344,6 +318,20 @@ export default function Form() {
             >
               <h2 className="text-2xl font-bold tracking-tight mb-6 text-primary">Assets Information</h2>
               <form onSubmit={handleAssetSubmit} className="space-y-6 bg-zinc-900/30 p-8 rounded-2xl border border-zinc-800">
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={assetForm.email}
+                    onChange={(e) => setAssetForm({ ...assetForm, email: e.target.value })}
+                    placeholder="your@email.com"
+                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  />
+                </div>
+
                 <div className="space-y-4">
                   <label className="block text-sm font-medium text-zinc-300 uppercase tracking-wider">
                     Assets Count

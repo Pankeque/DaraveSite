@@ -113,13 +113,15 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
       resave: false,
       saveUninitialized: false,
       rolling: true, // Reset session expiration on each request
+      name: "darave_session", // Custom session name for better identification
       cookie: {
         secure: isProduction, // HTTPS required for cross-origin cookies
         httpOnly: true,
         sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days for better persistence
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year for maximum persistence
         partitioned: isProduction, // CHIPS support for cross-origin cookies in Chrome 114+
         path: "/", // Ensure cookie is available on all paths
+        domain: isProduction ? undefined : undefined, // Let browser handle domain automatically
       },
     })
   );
@@ -350,24 +352,22 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     }
   });
 
-  // Game Submission endpoint - requires authentication
+  // Game Submission endpoint - no authentication required
   app.post("/api/submissions/game", async (req: Request, res: Response) => {
     console.log("[DEBUG] Game submission request body:", req.body);
-    console.log("[DEBUG] Session userId:", req.session.userId);
-    
-    // Check authentication
-    if (!req.session.userId) {
-      return res.status(401).json({ message: "Authentication required" });
-    }
     
     try {
       const data = insertGameSubmissionSchema.parse(req.body);
       console.log("[DEBUG] Parsed game data:", data);
       
-      // Include user_id from session
       const [submission] = await db.insert(gameSubmissions).values({
-        ...data,
-        userId: req.session.userId,
+        email: data.email,
+        gameName: data.gameName,
+        gameLink: data.gameLink,
+        dailyActiveUsers: data.dailyActiveUsers,
+        totalVisits: data.totalVisits,
+        revenue: data.revenue,
+        userId: req.session.userId || null,
       }).returning();
       
       console.log("[DEBUG] Game submission saved:", submission);
@@ -396,24 +396,20 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
     }
   });
 
-  // Asset Submission endpoint - requires authentication
+  // Asset Submission endpoint - no authentication required
   app.post("/api/submissions/asset", async (req: Request, res: Response) => {
     console.log("[DEBUG] Asset submission request body:", req.body);
-    console.log("[DEBUG] Session userId:", req.session.userId);
-    
-    // Check authentication
-    if (!req.session.userId) {
-      return res.status(401).json({ message: "Authentication required" });
-    }
     
     try {
       const data = insertAssetSubmissionSchema.parse(req.body);
       console.log("[DEBUG] Parsed asset data:", data);
       
-      // Include user_id from session
       const [submission] = await db.insert(assetSubmissions).values({
-        ...data,
-        userId: req.session.userId,
+        email: data.email,
+        assetsCount: data.assetsCount,
+        assetLinks: data.assetLinks,
+        additionalNotes: data.additionalNotes,
+        userId: req.session.userId || null,
       }).returning();
       
       console.log("[DEBUG] Asset submission saved:", submission);

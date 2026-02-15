@@ -66,6 +66,7 @@ async function runMigrations() {
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS game_submissions (
         id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
         game_name TEXT NOT NULL,
         game_link TEXT NOT NULL,
         daily_active_users TEXT,
@@ -76,6 +77,7 @@ async function runMigrations() {
       );
 
       CREATE INDEX IF NOT EXISTS idx_game_submissions_user_id ON game_submissions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_game_submissions_email ON game_submissions(email);
     `);
     console.log("[MIGRATION] Game submissions table ready");
 
@@ -83,6 +85,7 @@ async function runMigrations() {
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS asset_submissions (
         id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
         assets_count TEXT,
         asset_links TEXT,
         additional_notes TEXT,
@@ -91,8 +94,22 @@ async function runMigrations() {
       );
 
       CREATE INDEX IF NOT EXISTS idx_asset_submissions_user_id ON asset_submissions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_asset_submissions_email ON asset_submissions(email);
     `);
     console.log("[MIGRATION] Asset submissions table ready");
+
+    // Add email column to existing tables if it doesn't exist
+    try {
+      await db.execute(sql`
+        ALTER TABLE game_submissions ADD COLUMN IF NOT EXISTS email TEXT;
+      `);
+      await db.execute(sql`
+        ALTER TABLE asset_submissions ADD COLUMN IF NOT EXISTS email TEXT;
+      `);
+      console.log("[MIGRATION] Email columns added to submissions tables");
+    } catch (error) {
+      console.log("[MIGRATION] Email columns might already exist, continuing...");
+    }
 
     console.log("[MIGRATION] All migrations completed successfully!");
   } catch (error) {

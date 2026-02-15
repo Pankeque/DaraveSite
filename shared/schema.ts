@@ -54,6 +54,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 // Game Form Schema
 export const gameSubmissions = pgTable("game_submissions", {
   id: serial("id").primaryKey(),
+  email: text("email").notNull(),
   gameName: text("game_name").notNull(),
   gameLink: text("game_link").notNull(),
   dailyActiveUsers: text("daily_active_users"),
@@ -66,6 +67,7 @@ export const gameSubmissions = pgTable("game_submissions", {
 // Assets Form Schema
 export const assetSubmissions = pgTable("asset_submissions", {
   id: serial("id").primaryKey(),
+  email: text("email").notNull(),
   assetsCount: text("assets_count"),
   assetLinks: text("asset_links"),
   additionalNotes: text("additional_notes"),
@@ -74,12 +76,14 @@ export const assetSubmissions = pgTable("asset_submissions", {
 });
 
 export const insertGameSubmissionSchema = createInsertSchema(gameSubmissions).pick({
+  email: true,
   gameName: true,
   gameLink: true,
   dailyActiveUsers: true,
   totalVisits: true,
   revenue: true,
 }).extend({
+  email: z.string().email("Please enter a valid email address"),
   gameName: z.string().min(1, "Game name is required"),
   gameLink: z.string().url("Please enter a valid URL"),
   dailyActiveUsers: z.string().optional(),
@@ -88,10 +92,12 @@ export const insertGameSubmissionSchema = createInsertSchema(gameSubmissions).pi
 });
 
 export const insertAssetSubmissionSchema = createInsertSchema(assetSubmissions).pick({
+  email: true,
   assetsCount: true,
   assetLinks: true,
   additionalNotes: true,
 }).extend({
+  email: z.string().email("Please enter a valid email address"),
   assetsCount: z.string().optional(),
   assetLinks: z.string().optional(),
   additionalNotes: z.string().optional(),

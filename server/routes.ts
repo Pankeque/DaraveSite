@@ -118,7 +118,7 @@ export async function registerRoutes(server: Server, app: Express): Promise<void
         secure: isProduction, // HTTPS required for cross-origin cookies
         httpOnly: true,
         sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year for maximum persistence
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 1 month
         partitioned: isProduction, // CHIPS support for cross-origin cookies in Chrome 114+
         path: "/", // Ensure cookie is available on all paths
         domain: isProduction ? undefined : undefined, // Let browser handle domain automatically

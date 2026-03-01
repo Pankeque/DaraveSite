@@ -34,9 +34,9 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center"
           >
-            <img 
-              src="/logo-navbar.png" 
-              alt="Darave Studios Logo" 
+            <img
+              src="/logo-navbar.png?v=2"
+              alt="Darave Studios Logo"
               className="h-10 w-auto"
             />
           </motion.div>
@@ -147,7 +147,7 @@ export default function Home() {
         <div
           className="absolute inset-0 z-0 opacity-45"
           style={{
-            backgroundImage: "url('/image-principal-landpage.png')",
+            backgroundImage: "url('/image-principal-landpage.png?v=2')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -168,9 +168,9 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex justify-center mb-6"
           >
-            <img 
-              src="/logo-hero.png" 
-              alt="Darave Studios" 
+            <img
+              src="/logo-hero.png?v=2"
+              alt="Darave Studios"
               className="max-w-full h-auto md:max-w-3xl lg:max-w-4xl"
             />
           </motion.div>
@@ -251,7 +251,7 @@ export default function Home() {
             title="Visucord"
             description="Comprehensive Discord statistics and analytics bot providing deep insights into server activity and member engagement."
             link="https://discord.com/oauth2/authorize?client_id=1467926916119007520"
-            image="/portfolio-visucord.png"
+            image="/portfolio-visucord.png?v=2"
           />
         </div>
       </section>
@@ -262,7 +262,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
             <div className="space-y-6">
               <img 
-                src="/logo-navbar.png" 
+                src="/logo-navbar.png?v=2"
                 alt="Darave Studios Logo" 
                 className="h-12 w-auto"
               />

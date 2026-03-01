@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-
-// All API requests are now same-origin (unified Vercel deployment)
-// No need for API_BASE_URL - everything is on the same domain
+import { SEO, generateWebPageSchema } from "@/components/SEO";
 
 export default function Form() {
+  const pageSchema = generateWebPageSchema(
+    "Submit Your Metrics | Darave Studios",
+    "Submit your game metrics or asset portfolio for review by Darave Studios.",
+    "/form"
+  );
+
   const { toast } = useToast();
   
   // Game form state
@@ -174,6 +178,13 @@ export default function Form() {
   };
 
   return (
+    <>
+      <SEO
+        title="Submit Your Metrics | Darave Studios"
+        description="Submit your game metrics or asset portfolio for review by Darave Studios. We evaluate Roblox games and assets for potential partnerships."
+        pathname="/form"
+        structuredData={pageSchema}
+      />
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-50">
@@ -384,5 +395,6 @@ export default function Form() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

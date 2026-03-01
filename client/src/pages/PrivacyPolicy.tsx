@@ -1,12 +1,26 @@
 import { motion } from "framer-motion";
+import { SEO, generateWebPageSchema } from "@/components/SEO";
 
 export default function PrivacyPolicy() {
+  const pageSchema = generateWebPageSchema(
+    "Privacy Policy | Darave Studios",
+    "Learn how Darave Studios collects, uses, and protects your personal information.",
+    "/privacy"
+  );
+
   return (
+    <>
+      <SEO
+        title="Privacy Policy | Darave Studios"
+        description="Learn how Darave Studios collects, uses, and protects your personal information. Read our comprehensive privacy policy."
+        pathname="/privacy"
+        structuredData={pageSchema}
+      />
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-50" role="banner">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold">Privacy Policy</h1>
+          <span className="text-xl font-bold">Privacy Policy</span>
           <a
             href="/"
             className="text-sm text-zinc-400 hover:text-white transition-colors"
@@ -139,5 +153,6 @@ export default function PrivacyPolicy() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

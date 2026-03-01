@@ -7,6 +7,7 @@ import { RippleBackground } from "@/components/RippleBackground";
 import { MarqueeServices } from "@/components/MarqueeServices";
 import { MobileMenu } from "@/components/MobileMenu";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEO, generateOrganizationSchema, generateWebPageSchema } from "@/components/SEO";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,10 +25,32 @@ export default function Home() {
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 500], [1, 0.9]);
 
+  const pageSchema = generateWebPageSchema(
+    "Darave Studios - Game Development & Creative Solutions",
+    "Darave Studios is a leading game development studio specializing in Roblox games, assets, and creative solutions.",
+    "/"
+  );
+  const orgSchema = generateOrganizationSchema();
+
   return (
+    <>
+      <SEO
+        title="Darave Studios - Game Development & Creative Solutions | Roblox Games & Assets"
+        description="Darave Studios is a leading game development studio specializing in Roblox games, assets, and creative solutions. We create immersive gaming experiences and high-quality game assets."
+        pathname="/"
+        structuredData={[pageSchema, orgSchema]}
+      />
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-black font-sans overflow-x-hidden">
+      {/* Skip Link para acessibilidade */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:bg-primary focus:text-black focus:px-4 focus:py-2 focus:rounded-md"
+      >
+        Pular para conteúdo principal
+      </a>
+
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 md:px-12 flex justify-between items-center bg-black/30 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 md:px-12 flex justify-between items-center bg-black/30 backdrop-blur-sm" role="navigation" aria-label="Navegação principal">
         <div className="flex items-center gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -38,6 +61,9 @@ export default function Home() {
               src="/logo-navbar.png?v=2"
               alt="Darave Studios Logo"
               className="h-10 w-auto"
+              width="150"
+              height="40"
+              loading="eager"
             />
           </motion.div>
 
@@ -142,7 +168,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden" role="banner" aria-label="Apresentação da Darave Studios">
         {/* Background Image */}
         <div
           className="absolute inset-0 z-0 opacity-45"
@@ -162,6 +188,11 @@ export default function Home() {
           style={{ opacity: heroOpacity, scale: heroScale }}
           className="relative z-10 text-center px-4"
         >
+          {/* H1 para SEO - posicionado absolutamente fora da tela mas acessível */}
+          <h1 className="absolute left-[-9999px] w-1 h-1 overflow-hidden">
+            Darave Studios - Game Development & Creative Solutions | Roblox Games & Assets
+          </h1>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -170,8 +201,12 @@ export default function Home() {
           >
             <img
               src="/logo-hero.png?v=2"
-              alt="Darave Studios"
+              alt="Darave Studios Logo - Game Development Studio"
               className="max-w-full h-auto md:max-w-3xl lg:max-w-4xl"
+              width="1200"
+              height="400"
+              loading="eager"
+              decoding="async"
             />
           </motion.div>
 
@@ -199,11 +234,14 @@ export default function Home() {
       {/* Marquee Section */}
       <MarqueeServices />
 
+      {/* Main Content */}
+      <main id="main-content" role="main">
+      
       {/* About Section */}
-      <section id="about" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto">
+      <section id="about" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto" aria-labelledby="about-heading">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-end">
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+            <h2 id="about-heading" className="text-3xl md:text-4xl font-bold leading-tight">
               We craft immersive digital experiences and high-fidelity assets for the gaming community.
             </h2>
             <p className="text-zinc-400 leading-relaxed max-w-md">
@@ -222,9 +260,9 @@ export default function Home() {
       </section>
 
       {/* Portfolio Section */}
-      <section id="portfolio" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-zinc-900">
+      <section id="portfolio" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-zinc-900" aria-labelledby="portfolio-heading">
         <div className="mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">Portfolio</h2>
+          <h2 id="portfolio-heading" className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">Portfolio</h2>
           <p className="text-zinc-500 uppercase tracking-widest text-sm">Featured Applications</p>
         </div>
 
@@ -256,15 +294,20 @@ export default function Home() {
         </div>
       </section>
 
+      </main>
+
       {/* Footer */}
-      <footer id="contact" className="py-24 md:py-32 px-6 md:px-12 bg-zinc-950 border-t border-zinc-900">
+      <footer id="contact" className="py-24 md:py-32 px-6 md:px-12 bg-zinc-950 border-t border-zinc-900" role="contentinfo">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
             <div className="space-y-6">
-              <img 
+              <img
                 src="/logo-navbar.png?v=2"
-                alt="Darave Studios Logo" 
+                alt="Darave Studios Logo"
                 className="h-12 w-auto"
+                width="200"
+                height="48"
+                loading="lazy"
               />
               <p className="text-zinc-500 max-w-sm">
                 Pushing the boundaries of game development and asset creation since 2024.
@@ -313,6 +356,7 @@ export default function Home() {
       <AuthModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
     </div>
+    </>
   );
 }
 
@@ -334,19 +378,24 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
 
 function PortfolioCard({ title, description, link, image }: { title: string; description: string; link: string; image: string }) {
   return (
-    <motion.div
+    <motion.article
       whileHover={{ y: -10 }}
       className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:bg-zinc-900/60 hover:border-primary/50 transition-all duration-300 flex flex-col"
+      aria-labelledby={`portfolio-${title.toLowerCase().replace(/\s+/g, '-')}`}
     >
       <div className="aspect-square w-full overflow-hidden bg-zinc-950">
         <img
           src={image}
-          alt={title}
+          alt={`${title} - Portfolio preview image`}
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+          width="400"
+          height="400"
+          loading="lazy"
+          decoding="async"
         />
       </div>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-xl font-bold mb-3">{title}</h3>
+        <h3 id={`portfolio-${title.toLowerCase().replace(/\s+/g, '-')}`} className="text-xl font-bold mb-3">{title}</h3>
         <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-1">
           {description}
         </p>
@@ -359,6 +408,6 @@ function PortfolioCard({ title, description, link, image }: { title: string; des
           View Project <ExternalLink className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
         </a>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

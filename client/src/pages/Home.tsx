@@ -233,19 +233,19 @@ export default function Home() {
             title="Robbers"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
             link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
-            image="/portfolio-robbers.png"
+            image="/portfolio-robbers.png?v=2"
           />
           <PortfolioCard
             title="Animation Package Catalog"
             description="A comprehensive catalog of animation packages for Roblox, featuring high-quality character animations and movements."
             link="https://www.roblox.com/pt/games/137596460407088/Animation-Package-Catalog"
-            image="/portfolio-animation.png"
+            image="/portfolio-animation.png?v=2"
           />
           <PortfolioCard
             title="Ticketmatics"
             description="Professional Discord ticket management bot with advanced features for support teams and community management."
             link="https://discord.com/oauth2/authorize?client_id=1408807066465865778"
-            image="/portfolio-ticketmatics.png"
+            image="/portfolio-ticketmatics.png?v=2"
           />
           <PortfolioCard
             title="Visucord"

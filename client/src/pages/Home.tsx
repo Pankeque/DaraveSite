@@ -270,13 +270,13 @@ export default function Home() {
           <PortfolioCard
             title="Robbers"
             description="An immersive Roblox game experience where players engage in thrilling heist scenarios with strategic gameplay and teamwork."
-            link="https://www.roblox.com/pt/games/6785934357/Ladr-es"
+            link="https://www.roblox.com/games/6785934357/Ladr-es"
             image="/portfolio-robbers.png?v=2"
           />
           <PortfolioCard
             title="Animation Package Catalog"
             description="A comprehensive catalog of animation packages for Roblox, featuring high-quality character animations and movements."
-            link="https://www.roblox.com/pt/games/137596460407088/Animation-Package-Catalog"
+            link="https://www.roblox.com/games/137596460407088/Animation-Package-Catalog"
             image="/portfolio-animation.png?v=2"
           />
           <PortfolioCard

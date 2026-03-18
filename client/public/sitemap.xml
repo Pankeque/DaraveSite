@@ -17,7 +17,7 @@
 <!--  Homepage - Main landing page  -->
 <url>
 <loc>https://daravestudios.vercel.app/</loc>
-<lastmod>2026-03-08</lastmod>
+<lastmod>2026-03-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>1.0</priority>
 <image:image>
@@ -55,7 +55,7 @@
 <!--  Form Page - Contact/Registration  -->
 <url>
 <loc>https://daravestudios.vercel.app/form</loc>
-<lastmod>2026-03-08</lastmod>
+<lastmod>2026-03-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.8</priority>
 </url>
@@ -63,7 +63,7 @@
 <!--  Privacy Policy  -->
 <url>
 <loc>https://daravestudios.vercel.app/privacy</loc>
-<lastmod>2026-03-08</lastmod>
+<lastmod>2026-03-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.3</priority>
 </url>
@@ -71,7 +71,7 @@
 <!--  Terms of Service  -->
 <url>
 <loc>https://daravestudios.vercel.app/terms</loc>
-<lastmod>2026-03-08</lastmod>
+<lastmod>2026-03-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.3</priority>
 </url>

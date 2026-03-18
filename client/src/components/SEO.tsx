@@ -78,6 +78,7 @@ export function generateOrganizationSchema() {
     description: 'Darave Studios is a leading game development studio specializing in Roblox games, assets, and creative solutions.',
     sameAs: [
       'https://twitter.com/daravestudios',
+      'https://discord.gg/74HtzDZX4U',
       'https://www.roblox.com/groups/35946997',
     ],
     contactPoint: {

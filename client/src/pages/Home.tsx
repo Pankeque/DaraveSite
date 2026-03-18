@@ -251,7 +251,7 @@ export default function Home() {
           
           <div className="flex flex-col gap-6 md:items-end">
             <div className="flex gap-4">
-              <SocialLink href="https://discord.gg/guCqacvEc" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
+              <SocialLink href="https://discord.gg/74HtzDZX4U" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
               <SocialLink href="https://www.roblox.com/share/g/35946997" icon={<SiRoblox className="w-5 h-5" />} label="Roblox" />
               <SocialLink href="https://x.com/DaraveStudios" icon={<SiX className="w-5 h-5" />} label="Twitter" />
             </div>
@@ -313,7 +313,7 @@ export default function Home() {
                 Pushing the boundaries of game development and asset creation since 2024.
               </p>
               <div className="flex gap-4">
-                <SocialLink href="https://discord.gg/guCqacvEc" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
+                <SocialLink href="https://discord.gg/74HtzDZX4U" icon={<SiDiscord className="w-5 h-5" />} label="Discord" />
                 <SocialLink href="https://www.roblox.com/share/g/35946997" icon={<SiRoblox className="w-5 h-5" />} label="Roblox" />
                 <SocialLink href="https://x.com/DaraveStudios" icon={<SiX className="w-5 h-5" />} label="Twitter" />
               </div>

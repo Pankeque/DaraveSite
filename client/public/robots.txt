@@ -14,15 +14,10 @@ Disallow: /auth/
 # Sitemap location
 Sitemap: https://daravestudios.vercel.app/sitemap.xml
 
-# Crawl delay (optional, for server performance)
-Crawl-delay: 1
-
 # Google specific
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 0
 
 # Bing specific
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1

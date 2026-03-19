@@ -40,6 +40,9 @@ This application runs entirely on Vercel with a unified architecture:
 │   │   ├── hooks/        # Custom hooks
 │   │   ├── lib/          # Utilities
 │   │   └── pages/        # Page components
+│   ├── public/
+│   │   ├── sitemap.xml   # SEO sitemap
+│   │   └── robots.txt    # Search engine rules
 │   └── index.html
 ├── lib/                   # Shared server utilities
 │   ├── db.ts             # Vercel Postgres connection
@@ -51,6 +54,66 @@ This application runs entirely on Vercel with a unified architecture:
 ├── drizzle.config.ts     # Drizzle configuration
 └── vercel.json           # Vercel deployment configuration
 ```
+
+## SEO Configuration
+
+This project includes comprehensive SEO optimization for Google Search Console and other search engines.
+
+### Key SEO Files
+
+| File | Purpose |
+|------|---------|
+| `client/public/sitemap.xml` | XML sitemap for search engines |
+| `client/public/robots.txt` | Crawler directives |
+| `vercel.json` | Server headers & rewrites |
+| `client/index.html` | Meta tags, Open Graph, Twitter Cards |
+| `client/src/components/SEO.tsx` | Dynamic SEO component |
+
+### SEO Features Implemented
+
+#### 1. Sitemap (`sitemap.xml`)
+- Lists all public pages (home, form, privacy, terms)
+- Includes image sitemaps for portfolio items
+- Updated `lastmod` dates for fresh content
+- Proper priority and changefreq values
+
+#### 2. Robots.txt (`robots.txt`)
+- Allows all crawlers
+- Disallows `/api/` and `/auth/` paths
+- Points to sitemap location
+
+#### 3. Vercel Configuration (`vercel.json`)
+- Explicit rewrites for `sitemap.xml` and `robots.txt` (not blocked by SPA catch-all)
+- Proper Cache-Control headers:
+  - HTML: `max-age=0, s-maxage=3600, stale-while-revalidate`
+  - Static assets: `max-age=31536000, immutable`
+  - Sitemap: `max-age=3600, s-maxage=86400, stale-while-revalidate`
+- Security headers (X-Content-Type-Options, X-Frame-Options, etc.)
+
+#### 4. Meta Tags (`index.html`)
+- **Primary Meta Tags**: title, description, author, robots
+- **Canonical URL**: Prevents duplicate content issues
+- **Open Graph**: Facebook/social media preview
+- **Twitter Cards**: Twitter preview
+- **Structured Data (JSON-LD)**:
+  - Organization schema
+  - Website schema
+
+#### 5. Dynamic SEO Component (`SEO.tsx`)
+- React Helmet Async for SPA routing
+- Per-page meta tags
+- Structured data generators:
+  - Organization schema
+  - WebPage schema
+  - BreadcrumbList schema
+- Proper handling of arrays in structured data
+
+### Google Search Console Tips
+
+1. **Verify ownership** at [Google Search Console](https://search.google.com/search-console)
+2. **Submit sitemap**: `https://daravestudios.vercel.app/sitemap.xml`
+3. **Request indexing** after major updates
+4. **Check Coverage** for indexing errors
 
 ## Development
 

@@ -60,7 +60,11 @@ export function SEO({
       {/* Structured Data */}
       {structuredData && (
         <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
+          {JSON.stringify(
+            Array.isArray(structuredData)
+              ? { "@graph": structuredData }
+              : structuredData
+          )}
         </script>
       )}
     </Helmet>
@@ -81,11 +85,6 @@ export function generateOrganizationSchema() {
       'https://discord.gg/74HtzDZX4U',
       'https://www.roblox.com/groups/35946997',
     ],
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      availableLanguage: ['English', 'Portuguese'],
-    },
   };
 }
 

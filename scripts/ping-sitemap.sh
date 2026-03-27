@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script de post-deploy para reindexar sitemap no Google
-# Use: npm run postdeploy (ou configure no Vercel)
+# Script de post-deploy para Vercel
+# Use: npm run postdeploy (ou configure no Vercel Deploy Hook)
 
 SITE_URL="https://daravestudios.vercel.app"
 SITEMAP_URL="$SITE_URL/sitemap.xml"
@@ -17,28 +17,19 @@ DEPLOY_CODE=$(echo "$DEPLOY_RESPONSE" | tail -n1)
 
 if [ "$DEPLOY_CODE" = "200" ] || [ "$DEPLOY_CODE" = "201" ]; then
     echo "✅ Deploy hook acionado com sucesso! (HTTP $DEPLOY_CODE)"
+    echo "📝 O Vercel vai reconstruir o site automaticamente."
 else
     echo "⚠️ Deploy hook retornou: HTTP $DEPLOY_CODE"
 fi
 
 echo ""
-
-# 2. Enviar ping para o Google reindexar sitemap
-echo "� Enviando ping para o Google reindexar sitemap..."
-echo "📍 Sitemap: $SITEMAP_URL"
-
-HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' "https://www.google.com/ping?sitemap=$SITEMAP_URL")
-
-if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "204" ]; then
-    echo "✅ Google recebeu o ping com sucesso! (HTTP $HTTP_CODE)"
-    echo "📝 O Google vai começar a reindexar suas páginas em breve."
-else
-    echo "⚠️ Resposta do Google: HTTP $HTTP_CODE"
-    echo "💡 O Google pode ter bloqueado ou haver um problema temporário."
-fi
-
+echo "📊 Monitore o deploy em:"
+echo "   https://vercel.com/dashboard"
 echo ""
-echo "📊 Para verificar a reindexação, visite:"
-echo "   https://search.google.com/search-console/indexing-errors?resource_id=sc-domain:daravestudios.vercel.app"
+echo "📊 Para solicitar reindexação manual no Google (consome quota):"
+echo "   https://search.google.com/search-console/indexing-errors"
 echo ""
 echo "✨ Post-deploy concluído!"
+echo ""
+echo "ℹ️  Nota: O ping de sitemap foi Deprecated pelo Google em 2023."
+echo "   O Google agora descobre atualizações automaticamente."

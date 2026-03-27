@@ -11,8 +11,8 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "ping:sitemap": "curl -s -o /dev/null -w '%{http_code}' 'https://www.google.com/ping?sitemap=https://daravestudios.vercel.app/sitemap.xml'",
-    "postdeploy": "npm run ping:sitemap"
+    "postdeploy": "curl -s -X POST 'https://api.vercel.com/v1/integrations/deploy/prj_WJFvbmRw1Xsykp0rtNiYgTpgUPvI/108RsYA8tg'",
+    "ping:deploy": "npm run postdeploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

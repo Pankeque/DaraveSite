@@ -57,8 +57,8 @@ export function SEO({
       <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:creator" content="@daravestudios" />
 
-      {/* Structured Data */}
-      {structuredData && (
+      {/* Structured Data - Only render if not homepage (already in index.html) */}
+      {pathname && pathname !== '/' && pathname !== '' && structuredData && (
         <script type="application/ld+json">
           {JSON.stringify(
             Array.isArray(structuredData)
@@ -67,6 +67,7 @@ export function SEO({
           )}
         </script>
       )}
+      {/* Homepage schema is handled in index.html */}
     </Helmet>
   );
 }

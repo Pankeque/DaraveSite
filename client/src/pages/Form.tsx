@@ -32,6 +32,48 @@ export default function Form() {
   
   const [isGameSubmitting, setIsGameSubmitting] = useState(false);
   const [isAssetSubmitting, setIsAssetSubmitting] = useState(false);
+  
+  // Form validation errors
+  const [gameFormErrors, setGameFormErrors] = useState<Record<string, string>>({});
+  const [assetFormErrors, setAssetFormErrors] = useState<Record<string, string>>({});
+  
+  // Validate game form
+  const validateGameForm = (): boolean => {
+    const errors: Record<string, string> = {};
+    
+    if (!gameForm.email) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gameForm.email)) {
+      errors.email = "Please enter a valid email";
+    }
+    
+    if (!gameForm.gameName.trim()) {
+      errors.gameName = "Game name is required";
+    }
+    
+    if (!gameForm.gameLink) {
+      errors.gameLink = "Game link is required";
+    } else if (!/^https?:\/\//.test(gameForm.gameLink)) {
+      errors.gameLink = "Please include https://";
+    }
+    
+    setGameFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  
+  // Validate asset form
+  const validateAssetForm = (): boolean => {
+    const errors: Record<string, string> = {};
+    
+    if (!assetForm.email) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assetForm.email)) {
+      errors.email = "Please enter a valid email";
+    }
+    
+    setAssetFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   // Helper function to safely parse JSON response
   const safeParseJSON = async (res: Response): Promise<{ data: any; error: string | null }> => {
@@ -61,6 +103,12 @@ export default function Form() {
 
   const handleGameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form before submitting
+    if (!validateGameForm()) {
+      return;
+    }
+    
     setIsGameSubmitting(true);
     
     console.log("[DEBUG] Game form submission started:", gameForm);
@@ -121,6 +169,12 @@ export default function Form() {
 
   const handleAssetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form before submitting
+    if (!validateAssetForm()) {
+      return;
+    }
+    
     setIsAssetSubmitting(true);
     
     console.log("[DEBUG] Asset form submission started:", assetForm);
@@ -230,10 +284,18 @@ export default function Form() {
                     type="email"
                     required
                     value={gameForm.email}
-                    onChange={(e) => setGameForm({ ...gameForm, email: e.target.value })}
+                    onChange={(e) => {
+                      setGameForm({ ...gameForm, email: e.target.value });
+                      setGameFormErrors(prev => ({ ...prev, email: "" }));
+                    }}
                     placeholder="your@email.com"
-                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className={`w-full px-6 py-4 bg-zinc-900/50 border rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ${
+                      gameFormErrors.email ? "border-red-500" : "border-zinc-800"
+                    }`}
                   />
+                  {gameFormErrors.email && (
+                    <p className="text-red-400 text-sm">{gameFormErrors.email}</p>
+                  )}
                 </div>
 
                 <div className="space-y-4">
@@ -244,10 +306,18 @@ export default function Form() {
                     type="text"
                     required
                     value={gameForm.gameName}
-                    onChange={(e) => setGameForm({ ...gameForm, gameName: e.target.value })}
+                    onChange={(e) => {
+                      setGameForm({ ...gameForm, gameName: e.target.value });
+                      setGameFormErrors(prev => ({ ...prev, gameName: "" }));
+                    }}
                     placeholder="Enter your game name"
-                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className={`w-full px-6 py-4 bg-zinc-900/50 border rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ${
+                      gameFormErrors.gameName ? "border-red-500" : "border-zinc-800"
+                    }`}
                   />
+                  {gameFormErrors.gameName && (
+                    <p className="text-red-400 text-sm">{gameFormErrors.gameName}</p>
+                  )}
                 </div>
 
                 <div className="space-y-4">
@@ -258,10 +328,18 @@ export default function Form() {
                     type="url"
                     required
                     value={gameForm.gameLink}
-                    onChange={(e) => setGameForm({ ...gameForm, gameLink: e.target.value })}
+                    onChange={(e) => {
+                      setGameForm({ ...gameForm, gameLink: e.target.value });
+                      setGameFormErrors(prev => ({ ...prev, gameLink: "" }));
+                    }}
                     placeholder="https://www.roblox.com/games/..."
-                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className={`w-full px-6 py-4 bg-zinc-900/50 border rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ${
+                      gameFormErrors.gameLink ? "border-red-500" : "border-zinc-800"
+                    }`}
                   />
+                  {gameFormErrors.gameLink && (
+                    <p className="text-red-400 text-sm">{gameFormErrors.gameLink}</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -335,10 +413,18 @@ export default function Form() {
                     type="email"
                     required
                     value={assetForm.email}
-                    onChange={(e) => setAssetForm({ ...assetForm, email: e.target.value })}
+                    onChange={(e) => {
+                      setAssetForm({ ...assetForm, email: e.target.value });
+                      setAssetFormErrors(prev => ({ ...prev, email: "" }));
+                    }}
                     placeholder="your@email.com"
-                    className="w-full px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className={`w-full px-6 py-4 bg-zinc-900/50 border rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ${
+                      assetFormErrors.email ? "border-red-500" : "border-zinc-800"
+                    }`}
                   />
+                  {assetFormErrors.email && (
+                    <p className="text-red-400 text-sm">{assetFormErrors.email}</p>
+                  )}
                 </div>
 
                 <div className="space-y-4">

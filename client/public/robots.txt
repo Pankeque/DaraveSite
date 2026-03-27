@@ -1,23 +1,14 @@
 # Robots.txt for Darave Studios
 # https://daravestudios.vercel.app
 
-# Allow all search engines
 User-agent: *
-
-# Allow all pages to be indexed
 Allow: /
-
-# Disallow admin and API routes
 Disallow: /api/
 Disallow: /auth/
 
-# Sitemap location
+# Google Search Console Verification
+# https://search.google.com/search-console
+Allow: /google56f0d9d7d9187730.html
+
+# Sitemap
 Sitemap: https://daravestudios.vercel.app/sitemap.xml
-
-# Google specific
-User-agent: Googlebot
-Allow: /
-
-# Bing specific
-User-agent: Bingbot
-Allow: /

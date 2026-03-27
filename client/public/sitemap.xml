@@ -9,53 +9,42 @@
 
 <!--  
   Sitemap for Darave Studios
-  Generated: 2026-03-08
-  This sitemap helps search engines discover and index all public pages.
-  Last updated: SEO optimization - lastmod atualizado para hoje
+  Generated: 2026-03-27
+  Last updated: 2026-03-27
  -->
 
 <!--  Homepage - Main landing page  -->
 <url>
 <loc>https://daravestudios.vercel.app/</loc>
-<lastmod>2026-03-18</lastmod>
+<lastmod>2026-03-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>1.0</priority>
 <image:image>
 <image:loc>https://daravestudios.vercel.app/logo-hero.png</image:loc>
 <image:title>Darave Studios Logo</image:title>
-<image:caption>Darave Studios - Game Development Studio</image:caption>
-</image:image>
-<image:image>
-<image:loc>https://daravestudios.vercel.app/image-principal-landpage.png</image:loc>
-<image:title>Darave Studios - Creative Development</image:title>
-<image:caption>Creating immersive gaming experiences</image:caption>
 </image:image>
 <image:image>
 <image:loc>https://daravestudios.vercel.app/portfolio-visucord.png</image:loc>
 <image:title>Visucord - Discord Bot Dashboard</image:title>
-<image:caption>Advanced Discord bot management tool</image:caption>
 </image:image>
 <image:image>
 <image:loc>https://daravestudios.vercel.app/portfolio-ticketmatics.png</image:loc>
 <image:title>Ticketmatics - Ticket Management System</image:title>
-<image:caption>Professional ticket management solution</image:caption>
 </image:image>
 <image:image>
 <image:loc>https://daravestudios.vercel.app/portfolio-animation.png</image:loc>
 <image:title>Animation Tools - Roblox Animation System</image:title>
-<image:caption>Custom animation tools for Roblox</image:caption>
 </image:image>
 <image:image>
 <image:loc>https://daravestudios.vercel.app/portfolio-robbers.png</image:loc>
 <image:title>Robbers - Roblox Game</image:title>
-<image:caption>Immersive Roblox gaming experience</image:caption>
 </image:image>
 </url>
 
 <!--  Form Page - Contact/Registration  -->
 <url>
 <loc>https://daravestudios.vercel.app/form</loc>
-<lastmod>2026-03-18</lastmod>
+<lastmod>2026-03-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.8</priority>
 </url>
@@ -63,17 +52,25 @@
 <!--  Privacy Policy  -->
 <url>
 <loc>https://daravestudios.vercel.app/privacy</loc>
-<lastmod>2026-03-18</lastmod>
-<changefreq>weekly</changefreq>
+<lastmod>2026-03-27</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.3</priority>
 </url>
 
 <!--  Terms of Service  -->
 <url>
 <loc>https://daravestudios.vercel.app/terms</loc>
-<lastmod>2026-03-18</lastmod>
-<changefreq>weekly</changefreq>
+<lastmod>2026-03-27</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.3</priority>
+</url>
+
+<!-- 404 Page -->
+<url>
+<loc>https://daravestudios.vercel.app/404</loc>
+<lastmod>2026-03-27</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.1</priority>
 </url>
 
 </urlset>

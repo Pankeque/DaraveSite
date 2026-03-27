@@ -34,9 +34,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
+      } else if (res.status === 401) {
+        // Explicitly handle unauthorized - user not logged in
+        setUser(null);
       }
     } catch (error) {
       console.error("Auth check failed:", error);
+      setUser(null); // Ensure clean state on error
     } finally {
       setIsLoading(false);
     }

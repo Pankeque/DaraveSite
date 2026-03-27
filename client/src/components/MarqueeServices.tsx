@@ -18,6 +18,7 @@ export function MarqueeServices() {
         <motion.div
           className="flex gap-8 items-center"
           animate={{ x: "-50%" }}
+          whileHover={{ animationPlayState: "paused" }}
           transition={{
             duration: 20,
             repeat: Infinity,

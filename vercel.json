@@ -103,7 +103,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=604800"
+          "value": "public, max-age=60, s-maxage=3600, stale-while-revalidate=604800"
         }
       ]
     },
@@ -112,7 +112,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=604800"
+          "value": "public, max-age=60, s-maxage=3600, stale-while-revalidate=604800"
         }
       ]
     },
@@ -122,6 +122,24 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/google56f0d9d7d9187730.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
         }
       ]
     },

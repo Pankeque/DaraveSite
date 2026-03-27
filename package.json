@@ -10,9 +10,7 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "postdeploy": "curl -s -X POST 'https://api.vercel.com/v1/integrations/deploy/prj_WJFvbmRw1Xsykp0rtNiYgTpgUPvI/108RsYA8tg'",
-    "ping:deploy": "npm run postdeploy"
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

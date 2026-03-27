@@ -32,7 +32,7 @@ export function MarqueeServices() {
                 <span
                   key={`${i}-${index}`}
                   className={`text-lg md:text-2xl font-bold tracking-tight uppercase ${
-                    service === "•" ? "text-black/40" : "text-black md:text-white mix-blend-hard-light"
+                    service === "•" ? "text-black/40" : "text-black"
                   }`}
                 >
                   {service}
